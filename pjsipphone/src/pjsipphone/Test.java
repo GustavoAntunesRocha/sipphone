@@ -1,21 +1,16 @@
 package pjsipphone;
 
-import org.pjsip.pjsua2.Account;
 import org.pjsip.pjsua2.AccountConfig;
 import org.pjsip.pjsua2.AuthCredInfo;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.EpConfig;
-import org.pjsip.pjsua2.OnRegStateParam;
 import org.pjsip.pjsua2.TransportConfig;
 import org.pjsip.pjsua2.pjsip_transport_type_e;
 
+import pjsipphone.entity.AccountEntity;
+
 //Subclass to extend the Account and get notifications etc.
-class MyAccount extends Account {
-@Override
-public void onRegState(OnRegStateParam prm) {
-   System.out.println("*** On registration state: " + prm.getCode() + prm.getReason());
-}
-}
+
 
 public class Test {
 static {
@@ -40,12 +35,12 @@ public static void main(String argv[]) {
        ep.libStart();
 
        AccountConfig acfg = new AccountConfig();
-       acfg.setIdUri("sip:test@sip.pjsip.org");
-       acfg.getRegConfig().setRegistrarUri("sip:sip.pjsip.org");
-       AuthCredInfo cred = new AuthCredInfo("digest", "*", "test", 0, "secret");
+       acfg.setIdUri("sip:211@telefonia.orlac.local");
+       acfg.getRegConfig().setRegistrarUri("sip:telefonia.orlac.local");
+       AuthCredInfo cred = new AuthCredInfo("digest", "*", "211", 0, "senha");
        acfg.getSipConfig().getAuthCreds().add( cred );
        // Create the account
-       MyAccount acc = new MyAccount();
+       AccountEntity acc = new AccountEntity();
        acc.create(acfg);
        // Here we don't have anything else to do..
        Thread.sleep(10000);
