@@ -14,7 +14,6 @@ import pjsipphone.entity.AccountEntity;
 
 public class Test {
 static {
-	System.setProperty("java.library.path", "/pjsipphone/libs");
    System.loadLibrary("pjsua2");
    System.out.println("Library loaded");
 }
@@ -35,15 +34,18 @@ public static void main(String argv[]) {
        ep.libStart();
 
        AccountConfig acfg = new AccountConfig();
-       acfg.setIdUri("sip:211@telefonia.orlac.local");
+       acfg.setIdUri("sip:8351@telefonia.orlac.local");
        acfg.getRegConfig().setRegistrarUri("sip:telefonia.orlac.local");
-       AuthCredInfo cred = new AuthCredInfo("digest", "*", "211", 0, "senha");
+       AuthCredInfo cred = new AuthCredInfo("digest", "*", "8351", 0, "password");
        acfg.getSipConfig().getAuthCreds().add( cred );
        // Create the account
        AccountEntity acc = new AccountEntity();
        acc.create(acfg);
-       // Here we don't have anything else to do..
-       Thread.sleep(10000);
+       
+       //Waiting for an call or the press of any key to continue
+       System.out.println("Press any key to exit...");
+       System.in.read();
+       
        /* Explicitly delete the account.
         * This is to avoid GC to delete the endpoint first before deleting
         * the account.
