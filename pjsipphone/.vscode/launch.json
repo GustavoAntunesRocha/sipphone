@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Test",
+            "request": "launch",
+            "mainClass": "pjsipphone.Test",
+            "projectName": "pjsipphone",
+            "args": "--capture-dev=-1 --playback-dev=-1",
+            "vmArgs": "-Djava.library.path=\"./libs/\""
+        }
+    ]
+}

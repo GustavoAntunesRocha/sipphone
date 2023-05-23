@@ -14,6 +14,8 @@ import pjsipphone.entity.AccountEntity;
 
 public class Test {
 static {
+    String libraryPath = "./lib";
+    System.setProperty("java.library.path", libraryPath);
    System.loadLibrary("pjsua2");
    System.out.println("Library loaded");
 }
@@ -36,7 +38,7 @@ public static void main(String argv[]) {
        AccountConfig acfg = new AccountConfig();
        acfg.setIdUri("sip:8351@telefonia.orlac.local");
        acfg.getRegConfig().setRegistrarUri("sip:telefonia.orlac.local");
-       AuthCredInfo cred = new AuthCredInfo("digest", "*", "8351", 0, "password");
+       AuthCredInfo cred = new AuthCredInfo("digest", "*", "8351", 0, "e5f9a03a83cb5de23b180181f15e2521");
        acfg.getSipConfig().getAuthCreds().add( cred );
        // Create the account
        AccountEntity acc = new AccountEntity();

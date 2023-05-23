@@ -27,7 +27,7 @@ public class AccountEntity extends Account{
 	public void onIncomingCall(OnIncomingCallParam prm) {
 		try {
 			int callId = prm.getCallId();
-			Call call = new Call(this, callId);
+			CallEntity call = new CallEntity(this, callId);
 			CallOpParam callParam = new CallOpParam();
 			callParam.setStatusCode(180);
 			call.answer(callParam);
@@ -35,7 +35,7 @@ public class AccountEntity extends Account{
 			System.out.println("\n\nIncoming call from: " + callInfo.getRemoteUri());
 			callParam.setStatusCode(200);
 			call.answer(callParam);
-			call.hangup(callParam);
+			//call.hangup(callParam);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
