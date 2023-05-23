@@ -33,8 +33,8 @@ public static void main(String argv[]) {
        sipTpConfig.setPort(5060);
        ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
        // Start the library
-       ep.libStart();
-
+       ep.libStart(); 
+       
        AccountConfig acfg = new AccountConfig();
        acfg.setIdUri("sip:8351@telefonia.orlac.local");
        acfg.getRegConfig().setRegistrarUri("sip:telefonia.orlac.local");

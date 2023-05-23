@@ -29,7 +29,12 @@ public class CallEntity extends Call{
     public void onCallState(OnCallStateParam prm) {
         try {
             CallInfo ci = getInfo();
-            connected = ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED;
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
+                delete();
+                connected = false;
+            } else{
+                connected = ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED;
+            }
             System.out.println("Call " + ci.getCallIdString() + " state=" + ci.getStateText());
         } catch (Exception e) {
             // TODO Auto-generated catch block
