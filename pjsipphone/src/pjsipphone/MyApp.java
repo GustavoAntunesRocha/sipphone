@@ -5,17 +5,14 @@ import org.pjsip.pjsua2.AuthCredInfo;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.EpConfig;
 import org.pjsip.pjsua2.TransportConfig;
-import org.pjsip.pjsua2.pjsip_transport_type_e;
 
-import pjsipphone.entity.AccountEntity;
+import pjsipphone.model.AccountEntity;
 
 //Subclass to extend the Account and get notifications etc.
 
 
-public class Test {
+public class MyApp {
 static {
-    String libraryPath = "./lib";
-    System.setProperty("java.library.path", libraryPath);
    System.loadLibrary("pjsua2");
    System.out.println("Library loaded");
 }
@@ -28,21 +25,27 @@ public static void main(String argv[]) {
        // Initialize endpoint
        EpConfig epConfig = new EpConfig();
        ep.libInit( epConfig );
+
+       AccountEntity acc = AccountEntity.readAccountFromFile("account.ser");
+
        // Create SIP transport. Error handling sample is shown
        TransportConfig sipTpConfig = new TransportConfig();
-       sipTpConfig.setPort(5060);
-       ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
+       sipTpConfig.setPort(acc.getTransportConfigModel().getPort());
+       ep.transportCreate(acc.getTransportConfigModel().getType(), sipTpConfig);
        // Start the library
        ep.libStart(); 
        
        AccountConfig acfg = new AccountConfig();
-       acfg.setIdUri("sip:8351@telefonia.orlac.local");
-       acfg.getRegConfig().setRegistrarUri("sip:telefonia.orlac.local");
-       AuthCredInfo cred = new AuthCredInfo("digest", "*", "8351", 0, "e5f9a03a83cb5de23b180181f15e2521");
+       acfg.setIdUri("sip:" + acc.getAccountConfigModel().getUsername() + "@" + acc.getAccountConfigModel().getDomain());
+       acfg.getRegConfig().setRegistrarUri("sip:" + acc.getAccountConfigModel().getDomain());
+       AuthCredInfo cred = new AuthCredInfo(acc.getAccountConfigModel().getScheme(),
+            acc.getAccountConfigModel().getRealm(), acc.getAccountConfigModel().getUsername(),
+        0, acc.getAccountConfigModel().getPassword());
        acfg.getSipConfig().getAuthCreds().add( cred );
        // Create the account
-       AccountEntity acc = new AccountEntity();
+       
        acc.create(acfg);
+       
        
        //Waiting for an call or the press of any key to continue
        System.out.println("Press any key to exit...");

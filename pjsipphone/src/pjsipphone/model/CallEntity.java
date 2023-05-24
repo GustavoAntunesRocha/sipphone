@@ -1,11 +1,10 @@
-package pjsipphone.entity;
+package pjsipphone.model;
 
 import org.pjsip.pjsua2.AudDevManager;
 import org.pjsip.pjsua2.AudioMedia;
 import org.pjsip.pjsua2.Call;
 import org.pjsip.pjsua2.CallInfo;
 import org.pjsip.pjsua2.CallMediaInfo;
-import org.pjsip.pjsua2.CallMediaInfoVector;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.Media;
 import org.pjsip.pjsua2.OnCallMediaStateParam;

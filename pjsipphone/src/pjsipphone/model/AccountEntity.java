@@ -1,31 +1,37 @@
-package pjsipphone.entity;
+package pjsipphone.model;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import org.pjsip.pjsua2.Account;
-import org.pjsip.pjsua2.AccountConfig;
 import org.pjsip.pjsua2.AccountInfo;
 import org.pjsip.pjsua2.CallInfo;
 import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.OnIncomingCallParam;
 import org.pjsip.pjsua2.OnRegStateParam;
-import org.pjsip.pjsua2.TransportConfig;
 
-public class AccountEntity extends Account{
+public class AccountEntity extends Account implements Serializable{
 
 	private int id;
 
 	private String name;
 
-	private AccountConfig accountConfig;
+	private AccountConfigModel accountConfig;
 
-	private TransportConfig transportConfig;
+	private TransportConfigModel transportConfig;
 
 	public AccountEntity() {}
+
+	public AccountEntity(int id, String name, AccountConfigModel accountConfig, TransportConfigModel transportConfig) {
+		this.id = id;
+		this.name = name;
+		this.accountConfig = accountConfig;
+		this.transportConfig = transportConfig;
+	}
 	
 	@Override
 	public void onRegState(OnRegStateParam prm) {
@@ -70,7 +76,7 @@ public class AccountEntity extends Account{
 		}
 	}
 
-	public static AccountEntity readAccountConfigFromFile(String filePath) {
+	public static AccountEntity readAccountFromFile(String filePath) {
 		try {
 			File file = new File(filePath);
 			FileInputStream fileInputStream = new FileInputStream(file);
@@ -83,19 +89,6 @@ public class AccountEntity extends Account{
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	public AccountEntity(String name, AccountConfig accountConfig, TransportConfig transportConfig) {
-		this.name = name;
-		this.accountConfig = accountConfig;
-		this.transportConfig = transportConfig;
-	}
-
-	public AccountEntity(int id, String name, AccountConfig accountConfig, TransportConfig transportConfig) {
-		this.id = id;
-		this.name = name;
-		this.accountConfig = accountConfig;
-		this.transportConfig = transportConfig;
 	}
 
 	public int getId() {
@@ -114,19 +107,19 @@ public class AccountEntity extends Account{
 		this.name = name;
 	}
 
-	public AccountConfig getAccountConfig() {
+	public AccountConfigModel getAccountConfigModel() {
 		return accountConfig;
 	}
 
-	public void setAccountConfig(AccountConfig accountConfig) {
+	public void setAccountConfigModel(AccountConfigModel accountConfig) {
 		this.accountConfig = accountConfig;
 	}
 
-	public TransportConfig getTransportConfig() {
+	public TransportConfigModel getTransportConfigModel() {
 		return transportConfig;
 	}
 
-	public void setTransportConfig(TransportConfig transportConfig) {
+	public void setTransportConfigModel(TransportConfigModel transportConfig) {
 		this.transportConfig = transportConfig;
 	}
 

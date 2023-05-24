@@ -3,9 +3,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Test",
+            "name": "MyApp",
             "request": "launch",
-            "mainClass": "pjsipphone.Test",
+            "mainClass": "pjsipphone.MyApp",
             "projectName": "pjsipphone",
             "args": "--capture-dev=-1 --playback-dev=-1",
             "vmArgs": "-Djava.library.path=\"./libs/\""
