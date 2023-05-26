@@ -7,8 +7,7 @@
             "request": "launch",
             "mainClass": "pjsipphone.MyApp",
             "projectName": "pjsipphone",
-            "args": "--capture-dev=-1 --playback-dev=-1",
-            "vmArgs": "-Djava.library.path=\"./libs/\""
+            "vmArgs": "javac --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml -Djava.library.path=\"./libs/\""
         }
     ]
 }
