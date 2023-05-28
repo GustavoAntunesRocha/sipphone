@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pjsipphone.pjsipphone.view.MainWindow">
+    <MenuBar>
+        <Menu text="File">
+            <MenuItem text="Exit" onAction="#handleExit"/>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="About" onAction="#handleAbout"/>
+        </Menu>
+    </MenuBar>
+    <HBox>
+        <VBox>
+            <Label text="Account Information"/>
+            <GridPane>
+                <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="usernameLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Domain:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="domainLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+        </VBox>
+        <VBox>
+            <Label text="Call Controls"/>
+            <HBox>
+                <Button text="Call" onAction="#handleCall"/>
+                <Button text="Hang Up" onAction="#handleHangUp"/>
+            </HBox>
+        </VBox>
+    </HBox>
+    <VBox>
+        <Label text="Call History"/>
+        <TableView fx:id="callHistoryTable">
+            <columns>
+                <TableColumn text="Date" fx:id="dateColumn"/>
+                <TableColumn text="Number" fx:id="numberColumn"/>
+                <TableColumn text="Duration" fx:id="durationColumn"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

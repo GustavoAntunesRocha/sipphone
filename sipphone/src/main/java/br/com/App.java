@@ -1,4 +1,4 @@
-package pjsipphone;
+package br.com;
 
 import java.io.IOException;
 
@@ -7,21 +7,25 @@ import org.pjsip.pjsua2.AuthCredInfo;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.EpConfig;
 import org.pjsip.pjsua2.TransportConfig;
+import org.pjsip.pjsua2.pjsip_transport_type_e;
 
+import br.com.model.AccountConfigModel;
+import br.com.model.AccountEntity;
+import br.com.model.TransportConfigModel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import pjsipphone.controller.MainController;
-import pjsipphone.model.AccountEntity;
-import pjsipphone.view.MainWindow;
+
 
 //Subclass to extend the Account and get notifications etc.
 
-public class MyApp extends Application {
+public class App extends Application {
 
     private static Scene scene;
+    private static AccountEntity acc;
+    private static Endpoint ep;
 
     static {
         System.loadLibrary("pjsua2");
@@ -31,19 +35,30 @@ public class MyApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Scene scene = new Scene(loadFXML("/pjsipphone/src/fxml/MainWindow.fxml"), 640, 480);
+        scene = new Scene(loadFXML("MainWindow"), 640, 480);
         stage.setScene(scene);
         stage.show();
 
         try {
             // Create endpoint
-            Endpoint ep = new Endpoint();
+            ep = new Endpoint();
             ep.libCreate();
             // Initialize endpoint
             EpConfig epConfig = new EpConfig();
             ep.libInit(epConfig);
 
-            AccountEntity acc = AccountEntity.readAccountFromFile("account.ser");
+            acc = AccountEntity.readAccountFromFile("account.ser");
+            if(acc == null) {
+                acc = new AccountEntity();
+                acc.setAccountConfigModel(new AccountConfigModel(
+                    "8351", "e5f9a03a83cb5de23b180181f15e2521", 
+                    "telefonia.orlac.local", "digest", "*", 0));
+                acc.setTransportConfigModel(new TransportConfigModel(
+                    5060, pjsip_transport_type_e.PJSIP_TRANSPORT_UDP));
+                acc.setId(1);
+                acc.setName("Account 1");
+                AccountEntity.writeAccountToFile(acc, "account.ser");
+            }
 
             // Create SIP transport. Error handling sample is shown
             TransportConfig sipTpConfig = new TransportConfig();
@@ -79,23 +94,6 @@ public class MyApp extends Application {
              mainController.setMainWindow(mainWindow);
              */
 
-            // Set up the scene and show the window
-            
-
-            // Waiting for an call or the press of any key to continue
-            System.out.println("Press any key to exit...");
-            System.in.read();
-
-            /*
-             * Explicitly delete the account.
-             * This is to avoid GC to delete the endpoint first before deleting
-             * the account.
-             */
-            acc.delete();
-
-            // Explicitly destroy and delete endpoint
-            ep.libDestroy();
-            ep.delete();
 
         } catch (Exception e) {
             System.out.println(e);
@@ -103,12 +101,24 @@ public class MyApp extends Application {
         }
     }
 
+    public static void deleteLibrary(){
+        try {
+            acc.delete();
+            ep.libDestroy();
+            ep.delete();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+
     static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MyApp.class.getResource(fxml));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
 
