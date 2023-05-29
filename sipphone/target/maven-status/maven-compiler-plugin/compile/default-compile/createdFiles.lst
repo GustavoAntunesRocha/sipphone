@@ -39,6 +39,7 @@ org/pjsip/pjsua2/CodecFmtp.class
 org/pjsip/pjsua2/AudioMediaPlayerInfo.class
 org/pjsip/pjsua2/AccountMediaConfig.class
 org/pjsip/pjsua2/SrtpCryptoVector.class
+br/com/view/MainWindow.class
 org/pjsip/pjsua2/AccountSipConfig.class
 org/pjsip/pjsua2/SendInstantMessageParam.class
 br/com/model/AccountConfigModel.class
@@ -53,7 +54,6 @@ org/pjsip/pjsua2/OnCallStateParam.class
 org/pjsip/pjsua2/OnCallTransferStatusParam.class
 org/pjsip/pjsua2/ConfPortInfo.class
 org/pjsip/pjsua2/AudioDevInfoVector2.class
-module-info.class
 org/pjsip/pjsua2/ContainerNode.class
 org/pjsip/pjsua2/TsxStateEventSrc.class
 org/pjsip/pjsua2/MediaFormat.class
@@ -193,7 +193,6 @@ org/pjsip/pjsua2/pjsua_invalid_id_const_.class
 org/pjsip/pjsua2/pjsua_destroy_flag.class
 org/pjsip/pjsua2/BuddyConfig.class
 org/pjsip/pjsua2/AudioMediaTransmitParam.class
-br/com/MainWindow.class
 org/pjsip/pjsua2/SWIGTYPE_p_void.class
 org/pjsip/pjsua2/CodecParamInfo.class
 org/pjsip/pjsua2/CallVidSetStreamParam.class

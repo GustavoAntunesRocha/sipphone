@@ -1,4 +1,4 @@
-package br.com;
+package br.com.view;
 
 import br.com.controller.MainController;
 import javafx.fxml.FXML;

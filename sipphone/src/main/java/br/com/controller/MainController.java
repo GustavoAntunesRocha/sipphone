@@ -1,8 +1,8 @@
 package br.com.controller;
 
 import br.com.App;
-import br.com.MainWindow;
 import br.com.model.AccountEntity;
+import br.com.view.MainWindow;
 import javafx.application.Platform;
 
 

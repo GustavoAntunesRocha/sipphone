@@ -65,7 +65,6 @@
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pjmedia_vid_dev_cap.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/MediaCoordinate.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/SipTxData.java
-/home/gustavo/Programacao/sipphone/sipphone/src/main/java/br/com/MainWindow.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/TsxStateEventSrc.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/VidDevManager.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/AudioMediaVector.java
@@ -124,6 +123,7 @@
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pj_constants_.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pjsua_ipv6_use.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/MediaFormatVideo.java
+/home/gustavo/Programacao/sipphone/sipphone/src/main/java/br/com/view/MainWindow.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/SipRxData.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/JbufState.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/AccountVideoConfig.java
@@ -150,7 +150,6 @@
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/AccountMediaConfig.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/RxMsgEvent.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/br/com/model/CallEntity.java
-/home/gustavo/Programacao/sipphone/sipphone/src/main/java/module-info.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/SWIGTYPE_p_void.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pjmedia_tone_desc.java
 /home/gustavo/Programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/MathStat.java
