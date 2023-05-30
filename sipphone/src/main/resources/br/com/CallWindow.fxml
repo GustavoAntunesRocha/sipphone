@@ -3,10 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
 
 <VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.CallWindow">
     <children>
-        <Label text="Incoming call from: #{CallWindow.callerNumber}" />
+        <Text fx:id="callerNumber"/>
         <VBox>
             <Label text="Call Controls"/>
             <HBox>

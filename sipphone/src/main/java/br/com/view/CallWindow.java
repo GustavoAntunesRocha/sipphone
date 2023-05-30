@@ -7,19 +7,32 @@ import br.com.controller.CallController;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 public class CallWindow {
     
     @FXML
-    private Label callerNumber = new Label();
+    private Text callerNumber;
 
     @FXML
-    private Label callerName = new Label();
+    private Text callerName;
+
+    public void initialize() {
+        try {
+            
+            this.callerNumber.setText("In call with: " + CallController.getInstance().getCallEntity().getInfo().getRemoteUri());
+            this.callerName.setText(CallController.getInstance().getCallEntity().getInfo().getRemoteContact());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public CallWindow(){
         try {
-            callerName.setText(CallController.getInstance().getCallEntity().getInfo().getRemoteContact());
-            callerNumber.setText(CallController.getInstance().getCallEntity().getInfo().getRemoteUri());
+            this.callerNumber = new Text();
+            this.callerName = new Text();
+            
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -32,7 +45,7 @@ public class CallWindow {
     }
 
     public void setCallerNumber(String callerNumber) {
-        this.callerNumber.setText(callerNumber);
+        this.callerNumber.setText("In call with: " + callerNumber);
     }
 
     public void setCallerName(String callerName) {

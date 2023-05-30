@@ -18,6 +18,8 @@ public class CallController {
     
     private static CallController instance;
 
+    private Stage stage;
+
     private CallController() {}
 
     public static CallController getInstance(){
@@ -31,7 +33,7 @@ public class CallController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                Stage stage = new Stage();
+                stage = new Stage();
                 try {
                     stage.setScene(callWindow.getScene());
                     stage.show();
@@ -82,6 +84,7 @@ public class CallController {
         callParam.setStatusCode(603);
         try {
             call.hangup(callParam);
+            this.stage.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

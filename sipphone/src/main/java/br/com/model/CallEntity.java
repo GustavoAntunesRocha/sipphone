@@ -36,7 +36,10 @@ public class CallEntity extends Call{
                 connected = false;
             } else if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
                 CallController callController = CallController.getInstance();
-                callController.setCallWindow(new CallWindow() , ci.getRemoteUri(), ci.getRemoteContact());
+                CallWindow callWindow = new CallWindow();
+                callWindow.setCallerNumber(ci.getRemoteUri());
+                callWindow.setCallerName(ci.getRemoteContact());
+                callController.setCallWindow(callWindow , ci.getRemoteUri(), ci.getRemoteContact());
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
