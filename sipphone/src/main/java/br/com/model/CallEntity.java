@@ -13,6 +13,9 @@ import org.pjsip.pjsua2.pjmedia_type;
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsua_call_media_status;
 
+import br.com.controller.CallController;
+import br.com.view.CallWindow;
+
 public class CallEntity extends Call{
 
     private boolean connected;
@@ -31,10 +34,10 @@ public class CallEntity extends Call{
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
                 delete();
                 connected = false;
-            } else{
-                connected = ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED;
+            } else if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
+                CallController callController = CallController.getInstance();
+                callController.setCallWindow(new CallWindow() , ci.getRemoteUri(), ci.getRemoteContact());
             }
-            System.out.println("Call " + ci.getCallIdString() + " state=" + ci.getStateText());
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

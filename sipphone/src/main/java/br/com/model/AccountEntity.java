@@ -9,10 +9,11 @@ import java.io.Serializable;
 
 import org.pjsip.pjsua2.Account;
 import org.pjsip.pjsua2.AccountInfo;
-import org.pjsip.pjsua2.CallInfo;
 import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.OnIncomingCallParam;
 import org.pjsip.pjsua2.OnRegStateParam;
+
+import br.com.controller.CallController;
 
 public class AccountEntity extends Account implements Serializable{
 
@@ -52,11 +53,9 @@ public class AccountEntity extends Account implements Serializable{
 			CallOpParam callParam = new CallOpParam();
 			callParam.setStatusCode(180);
 			call.answer(callParam);
-			CallInfo callInfo = call.getInfo();
-			System.out.println("\n\nIncoming call from: " + callInfo.getRemoteUri());
-			callParam.setStatusCode(200);
-			call.answer(callParam);
-			//call.hangup(callParam);
+			CallController callController = CallController.getInstance();
+			callController.setCallEntity(call);
+			callController.answerInput(call);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

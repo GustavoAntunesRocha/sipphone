@@ -7,7 +7,7 @@
             "request": "launch",
             "mainClass": "pjsipphone.MyApp",
             "projectName": "pjsipphone",
-            "vmArgs": "javac --module-path $PATH_TO_FX --add-modules javafx.controls,javafx.fxml -Djava.library.path=\"./libs/\""
+            "vmArgs": "--module-path /opt/javafx-sdk-17.0.7/lib --add-modules javafx.controls,javafx.fxml -Djava.library.path=\"./libs/\""
         }
     ]
 }

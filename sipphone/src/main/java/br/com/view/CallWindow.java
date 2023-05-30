@@ -3,6 +3,7 @@ package br.com.view;
 import java.io.IOException;
 
 import br.com.App;
+import br.com.controller.CallController;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -10,19 +11,24 @@ import javafx.scene.control.Label;
 public class CallWindow {
     
     @FXML
-    private Label callerNumber;
+    private Label callerNumber = new Label();
 
     @FXML
-    private Label callerName;
+    private Label callerName = new Label();
 
-    @FXML
-    private void handleHangUp() {
-        // Handle hang up button click
+    public CallWindow(){
+        try {
+            callerName.setText(CallController.getInstance().getCallEntity().getInfo().getRemoteContact());
+            callerNumber.setText(CallController.getInstance().getCallEntity().getInfo().getRemoteUri());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    private void handleAnswer() {
-        // Handle answer button click
+    private void handleHangUp() {
+        CallController.getInstance().handleHangupButtonAction(CallController.getInstance().getCallEntity());
     }
 
     public void setCallerNumber(String callerNumber) {
