@@ -5,17 +5,44 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 
 public class MainWindow {
 
     @FXML
-    private Label usernameLabel;
+    private Text username;
 
     @FXML
-    private Label domainLabel;
+    private Text domain;
 
     @FXML
-    private Label statusLabel;
+    private Text status;
+
+    private static MainWindow instance;
+
+    public static MainWindow getInstance() {
+        if (instance == null) {
+            instance = new MainWindow();
+        }
+        return instance;
+    }
+
+    public void initialize() {
+        if(MainController.getInstance().getAccountEntity() != null) {
+            this.username.setText(MainController.getInstance().getAccountEntity().getAccountConfigModel().getUsername());
+            this.domain.setText(MainController.getInstance().getAccountEntity().getAccountConfigModel().getDomain());
+            this.status.setText("Online");
+        } else{
+            System.out.println("\n\n\n\nConta nula!");
+
+        }
+    }
+
+    public MainWindow() {
+        username = new Text();
+        domain = new Text();
+        status = new Text();
+    }
 
     /* @FXML
     private TableView callHistoryTable;
@@ -30,15 +57,15 @@ public class MainWindow {
     private TableColumn durationColumn; */
 
     public void setUsername(String username) {
-        usernameLabel.setText(username);
+        this.username.setText(username);
     }
 
     public void setDomain(String domain) {
-        domainLabel.setText(domain);
+        this.domain.setText(domain);
     }
 
     public void setStatus(String status) {
-        statusLabel.setText(status);
+        this.status.setText(status);
     }
 
     /* public void setCallHistoryTable(TableView callHistoryTable) {
@@ -60,11 +87,6 @@ public class MainWindow {
     @FXML
     private void handleCall() {
         // Handle call button click
-    }
-
-    @FXML
-    private void handleHangUp() {
-        // Handle hang up button click
     }
 
     @FXML

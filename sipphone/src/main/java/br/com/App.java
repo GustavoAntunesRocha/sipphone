@@ -9,9 +9,11 @@ import org.pjsip.pjsua2.EpConfig;
 import org.pjsip.pjsua2.TransportConfig;
 import org.pjsip.pjsua2.pjsip_transport_type_e;
 
+import br.com.controller.MainController;
 import br.com.model.AccountConfigModel;
 import br.com.model.AccountEntity;
 import br.com.model.TransportConfigModel;
+import br.com.view.MainWindow;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,13 +37,18 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
+        MainController mainController = MainController.getInstance();
+        MainWindow mainWindow = MainWindow.getInstance();
+        
         scene = new Scene(loadFXML("MainWindow"), 640, 480);
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(event -> {
             deleteLibrary();
         });
-
+        mainController.setMainWindow(mainWindow);
+        
+        
         try {
             // Create endpoint
             ep = new Endpoint();
@@ -90,12 +97,7 @@ public class App extends Application {
             mainWindow.setStatus("Offline"); */
             
 
-            // Initialize the controller
             
-             /* MainController mainController = new MainController();
-             mainController.setAccountEntity(acc);
-             mainController.setMainWindow(mainWindow);
-             */
 
 
         } catch (Exception e) {

@@ -14,6 +14,9 @@ import org.pjsip.pjsua2.OnIncomingCallParam;
 import org.pjsip.pjsua2.OnRegStateParam;
 
 import br.com.controller.CallController;
+import br.com.controller.MainController;
+import br.com.view.MainWindow;
+import javafx.application.Platform;
 
 public class AccountEntity extends Account implements Serializable{
 
@@ -39,6 +42,16 @@ public class AccountEntity extends Account implements Serializable{
 		try {
 			AccountInfo ai = getInfo();
 			System.out.println(ai.getRegIsActive() ? "\n\nRegister: code=" : "*** Unregister: code=" + prm.getCode());
+			Platform.runLater(() -> {
+				if (ai.getRegIsActive()) {
+					MainController.getInstance().setAccountEntity(this);
+					MainWindow.getInstance().setDomain(this.accountConfig.getDomain());
+					MainWindow.getInstance().setUsername(this.accountConfig.getIdUri());
+					System.out.println("\n\n\n\nRegister test DOMAIN: " + this.accountConfig.getDomain());
+				} else {
+					System.out.println("\n\n\n\nUnregister");
+				}
+			});
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
