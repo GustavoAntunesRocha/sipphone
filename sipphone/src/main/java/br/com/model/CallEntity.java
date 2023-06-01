@@ -15,6 +15,7 @@ import org.pjsip.pjsua2.pjsua_call_media_status;
 
 import br.com.controller.CallController;
 import br.com.view.CallWindow;
+import br.com.view.MainWindow;
 
 public class CallEntity extends Call{
 

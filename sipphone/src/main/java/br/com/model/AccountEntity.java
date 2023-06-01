@@ -45,9 +45,7 @@ public class AccountEntity extends Account implements Serializable{
 			Platform.runLater(() -> {
 				if (ai.getRegIsActive()) {
 					MainController.getInstance().setAccountEntity(this);
-					MainWindow.getInstance().setDomain(this.accountConfig.getDomain());
-					MainWindow.getInstance().setUsername(this.accountConfig.getIdUri());
-					System.out.println("\n\n\n\nRegister test DOMAIN: " + this.accountConfig.getDomain());
+					MainController.getInstance().updateAccountText();
 				} else {
 					System.out.println("\n\n\n\nUnregister");
 				}

@@ -1,7 +1,9 @@
 package br.com.view;
 
+import br.com.App;
 import br.com.controller.MainController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -27,21 +29,11 @@ public class MainWindow {
         return instance;
     }
 
-    public void initialize() {
-        if(MainController.getInstance().getAccountEntity() != null) {
-            this.username.setText(MainController.getInstance().getAccountEntity().getAccountConfigModel().getUsername());
-            this.domain.setText(MainController.getInstance().getAccountEntity().getAccountConfigModel().getDomain());
-            this.status.setText("Online");
-        } else{
-            System.out.println("\n\n\n\nConta nula!");
-
-        }
-    }
-
     public MainWindow() {
         username = new Text();
         domain = new Text();
         status = new Text();
+        instance = this;
     }
 
     /* @FXML
@@ -98,5 +90,17 @@ public class MainWindow {
     @FXML
     private void handleAbout() {
         // Handle about menu item click
+    }
+
+    public Text getUsername() {
+        return username;
+    }
+
+    public Text getDomain() {
+        return domain;
+    }
+
+    public Text getStatus() {
+        return status;
     }
 }

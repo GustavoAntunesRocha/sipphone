@@ -29,27 +29,10 @@ public class App extends Application {
     private static AccountEntity acc;
     private static Endpoint ep;
 
-    static {
-        System.loadLibrary("pjsua2");
-        System.out.println("Library loaded");
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-
-        MainController mainController = MainController.getInstance();
-        MainWindow mainWindow = MainWindow.getInstance();
-        
-        scene = new Scene(loadFXML("MainWindow"), 640, 480);
-        stage.setScene(scene);
-        stage.show();
-        stage.setOnCloseRequest(event -> {
-            deleteLibrary();
-        });
-        mainController.setMainWindow(mainWindow);
-        
-        
+    public static void connectSipServer(){
         try {
+            System.loadLibrary("pjsua2");
+            System.out.println("Library loaded");
             // Create endpoint
             ep = new Endpoint();
             ep.libCreate();
@@ -89,21 +72,29 @@ public class App extends Application {
 
             acc.create(acfg);
 
-            // Initialize the view
-            /* FXMLLoader loader = new FXMLLoader(getClass().getResource("./resources/fxml/MainWindow.fxml"));
-            MainWindow mainWindow = loader.getController();
-            mainWindow.setUsername(acc.getAccountConfigModel().getUsername());
-            mainWindow.setDomain(acc.getAccountConfigModel().getDomain());
-            mainWindow.setStatus("Offline"); */
-            
-
-            
-
 
         } catch (Exception e) {
             System.out.println(e);
             return;
         }
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        MainController mainController = MainController.getInstance();
+        MainWindow mainWindow = MainWindow.getInstance();
+        
+        scene = new Scene(loadFXML("MainWindow"), 640, 480);
+        stage.setScene(scene);
+        stage.show();
+        stage.setOnCloseRequest(event -> {
+            deleteLibrary();
+        });
+        mainController.setMainWindow(mainWindow);
+
+        connectSipServer();
+         
     }
 
     public static void deleteLibrary(){
