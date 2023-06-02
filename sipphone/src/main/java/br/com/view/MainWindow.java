@@ -2,11 +2,13 @@ package br.com.view;
 
 import br.com.App;
 import br.com.controller.MainController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 public class MainWindow {
@@ -19,6 +21,12 @@ public class MainWindow {
 
     @FXML
     private Text status;
+
+    @FXML
+    private TextField numberField;
+
+    @FXML
+    private Button callButton;
 
     private static MainWindow instance;
 
@@ -33,6 +41,8 @@ public class MainWindow {
         username = new Text();
         domain = new Text();
         status = new Text();
+        numberField = new TextField();
+        callButton = new Button();
         instance = this;
     }
 
@@ -90,6 +100,13 @@ public class MainWindow {
     @FXML
     private void handleAbout() {
         // Handle about menu item click
+    }
+
+    @FXML
+    private void handleDigitButton(ActionEvent event) {
+        Button button = (Button) event.getSource();
+        String buttonText = button.getText();
+        this.numberField.setText(this.numberField.getText() + buttonText);
     }
 
     public Text getUsername() {
