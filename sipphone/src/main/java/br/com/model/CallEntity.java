@@ -5,6 +5,7 @@ import org.pjsip.pjsua2.AudioMedia;
 import org.pjsip.pjsua2.Call;
 import org.pjsip.pjsua2.CallInfo;
 import org.pjsip.pjsua2.CallMediaInfo;
+import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.Media;
 import org.pjsip.pjsua2.OnCallMediaStateParam;
@@ -15,7 +16,6 @@ import org.pjsip.pjsua2.pjsua_call_media_status;
 
 import br.com.controller.CallController;
 import br.com.view.CallWindow;
-import br.com.view.MainWindow;
 
 public class CallEntity extends Call{
 
@@ -27,12 +27,23 @@ public class CallEntity extends Call{
         connected = false;
         onHold = false;
     }
+
+    public CallEntity(AccountEntity acc) {
+        super(acc);
+        connected = false;
+        onHold = false;
+    }
     
     @Override
     public void onCallState(OnCallStateParam prm) {
         try {
             CallInfo ci = getInfo();
+            if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CALLING){
+                CallController.getInstance().showCallingAlert();
+            }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
+                if(CallController.getInstance().getAlert() != null)
+                    CallController.getInstance().closeAlertWindow();
                 delete();
                 connected = false;
             } else if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
@@ -65,6 +76,19 @@ public class CallEntity extends Call{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static CallEntity makeCall(AccountEntity accountEntity, String number){
+        CallEntity call = new CallEntity(accountEntity);
+        CallOpParam prm = new CallOpParam(true);
+        try {
+            call.makeCall("sip:" + number + "@" + accountEntity.getAccountConfigModel().getDomain(), prm);
+            //System.out.println("\n\n\n\n\nCall id: " + call.getId() + "\n\n");
+            CallController.getInstance().setCallEntity(call);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return call;
     }
     
 }

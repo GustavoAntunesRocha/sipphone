@@ -1,6 +1,7 @@
 package br.com.view;
 
 import br.com.App;
+import br.com.controller.CallController;
 import br.com.controller.MainController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -89,6 +90,7 @@ public class MainWindow {
     @FXML
     private void handleCall() {
         // Handle call button click
+        CallController.getInstance().handleCall(this.numberField.getText());
     }
 
     @FXML

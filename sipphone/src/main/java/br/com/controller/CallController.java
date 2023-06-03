@@ -20,6 +20,8 @@ public class CallController {
 
     private Stage stage;
 
+    private Alert alert;
+
     private CallController() {}
 
     public static CallController getInstance(){
@@ -83,8 +85,10 @@ public class CallController {
         CallOpParam callParam = new CallOpParam();
         callParam.setStatusCode(603);
         try {
-            call.hangup(callParam);
-            this.stage.close();
+            if(call != null){
+                call.hangup(callParam);
+                //this.stage.close();
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -99,6 +103,49 @@ public class CallController {
         this.callEntity = callEntity;
     }
 
+    public void handleCall(String number){
+        this.callEntity = CallEntity.makeCall(MainController.getInstance().getAccountEntity(), number);
+    }
+
+    public void showCallingAlert(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Alert alert;
+                try {
+                    alert = new Alert(Alert.AlertType.INFORMATION, "Calling: " + CallController.getInstance().getCallEntity().getInfo().getRemoteUri(), ButtonType.CANCEL);
+                    alert.initModality(Modality.APPLICATION_MODAL); // Set the modality to APPLICATION_MODAL
+                    CallController.getInstance().setAlert(alert);
+                    alert.show();
+                    if(alert.getResult() == ButtonType.CANCEL){
+                        handleHangupButtonAction(CallController.getInstance().getCallEntity());
+                        closeAlertWindow();
+                    }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+            }
+        });
+    }
+
+    public void closeAlertWindow(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                CallController.getInstance().getAlert().close();
+            }
+        });
+    }
+
+    public Alert getAlert() {
+        return alert;
+    }
+
+    public void setAlert(Alert alert) {
+        this.alert = alert;
+    }
     
 
 }
