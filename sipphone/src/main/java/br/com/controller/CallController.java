@@ -82,12 +82,12 @@ public class CallController {
     }
 
     public void handleHangupButtonAction(CallEntity call) {
-        CallOpParam callParam = new CallOpParam();
-        callParam.setStatusCode(603);
         try {
             if(call != null){
+                CallOpParam callParam = new CallOpParam();
+                callParam.setStatusCode(603);
                 call.hangup(callParam);
-                //this.stage.close();
+                this.stage.close();
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -145,6 +145,19 @@ public class CallController {
 
     public void setAlert(Alert alert) {
         this.alert = alert;
+    }
+
+    public void closeCallWindow(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                CallController.getInstance().getStage().close();
+            }
+        });
+    }
+
+    public Stage getStage() {
+        return stage;
     }
     
 

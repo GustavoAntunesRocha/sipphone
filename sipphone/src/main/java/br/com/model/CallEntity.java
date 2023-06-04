@@ -44,6 +44,7 @@ public class CallEntity extends Call{
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
                 if(CallController.getInstance().getAlert() != null)
                     CallController.getInstance().closeAlertWindow();
+                CallController.getInstance().closeCallWindow();
                 delete();
                 connected = false;
             } else if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
