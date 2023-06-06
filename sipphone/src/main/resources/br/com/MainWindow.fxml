@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="341.0" prefWidth="317.0" spacing="20.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.MainWindow">
+<VBox prefHeight="341.0" prefWidth="317.0" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.MainWindow">
     <MenuBar>
         <Menu text="File">
             <MenuItem onAction="#handleExit" text="Exit" />
@@ -21,6 +21,11 @@
         <Menu text="Help">
             <MenuItem onAction="#handleAbout" text="About" />
         </Menu>
+      <Menu mnemonicParsing="false" text="Settings">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Account" />
+        </items>
+      </Menu>
     </MenuBar>
     <HBox>
         <VBox>
@@ -47,7 +52,7 @@
    <VBox prefHeight="200.0" prefWidth="100.0">
       <children>
             <Label text="Call Controls" />
-         <TextField fx:id="numberField"/>
+         <TextField fx:id="numberField" />
          <GridPane>
            <columnConstraints>
              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -61,18 +66,18 @@
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="1" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="2" GridPane.columnIndex="1" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="3" GridPane.columnIndex="2" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="4" GridPane.rowIndex="1" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="7" GridPane.rowIndex="2" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="*" GridPane.rowIndex="3" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" onAction="#handleDigitButton"/>
-               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="#" GridPane.columnIndex="2" GridPane.rowIndex="3" onAction="#handleDigitButton"/>
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="1" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="2" GridPane.columnIndex="1" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="3" GridPane.columnIndex="2" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="4" GridPane.rowIndex="1" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="6" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="7" GridPane.rowIndex="2" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="*" GridPane.rowIndex="3" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDigitButton" text="#" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             </children>
          </GridPane>
              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#handleCall" prefHeight="24.0" prefWidth="55.0" text="Call" />
