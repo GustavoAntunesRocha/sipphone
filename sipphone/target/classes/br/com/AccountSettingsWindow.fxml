@@ -5,19 +5,20 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.PasswordField?>
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="234.0" prefWidth="322.0" fx:controller="br.com.view.AccountSettingsWindow" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1">
   <content>
     <AnchorPane prefHeight="219.0" prefWidth="303.0">
          <children>
             <Text layoutX="11.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Account Name" />
-            <TextField fx:id="accountNameField" layoutX="118.0" layoutY="134.0" />
+            <TextField fx:id="accountNameField" layoutX="118.0" layoutY="14.0" />
             <Text layoutX="39.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SIP Server" />
-            <TextField fx:id="accountDomainField" layoutX="118.0" layoutY="14.0" />
+            <TextField fx:id="accountDomainField" layoutX="118.0" layoutY="54.0" />
             <Text layoutX="76.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User" />
-            <TextField fx:id="accountUsernameField" layoutX="118.0" layoutY="54.0" />
+            <TextField fx:id="accountUsernameField" layoutX="118.0" layoutY="94.0" />
             <Text layoutX="45.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
-            <TextField fx:id="accountPasswordField" layoutX="118.0" layoutY="94.0" />
+            <PasswordField fx:id="accountPasswordField" layoutX="118.0" layoutY="134.0" />
             <Button onAction="#handleCancel" layoutX="227.0" layoutY="181.0" mnemonicParsing="false" text="Cancel" />
             <Button onAction="#handleSave" layoutX="154.0" layoutY="181.0" mnemonicParsing="false" text="Save" />
             <Button onAction="#handleDelete" layoutX="14.0" layoutY="181.0" mnemonicParsing="false" text="Delete" />

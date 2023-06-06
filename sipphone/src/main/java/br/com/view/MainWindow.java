@@ -1,6 +1,7 @@
 package br.com.view;
 
 import br.com.App;
+import br.com.controller.AccountController;
 import br.com.controller.CallController;
 import br.com.controller.MainController;
 import javafx.event.ActionEvent;
@@ -109,6 +110,12 @@ public class MainWindow {
         Button button = (Button) event.getSource();
         String buttonText = button.getText();
         this.numberField.setText(this.numberField.getText() + buttonText);
+    }
+
+    @FXML
+    private void handleAccountSettings() {
+        // Handle account settings menu item click
+        AccountController.getInstance().handleAccountSettingsWindow();
     }
 
     public Text getUsername() {

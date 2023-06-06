@@ -1,6 +1,7 @@
 package br.com.view;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -28,7 +29,18 @@ public class AccountSettingsWindow {
     private TextField accountUsernameField;
 
     @FXML
-    private TextField accountPasswordField;
+    private PasswordField accountPasswordField;
+
+    public AccountSettingsWindow(){
+        accountName = new Text();
+        accountDomain = new Text();
+        accountUsername = new Text();
+        accountPassword = new Text();
+        accountNameField = new TextField();
+        accountDomainField = new TextField();
+        accountUsernameField = new TextField();
+        accountPasswordField = new PasswordField();
+    }
 
     @FXML
     private void handleSave() {
