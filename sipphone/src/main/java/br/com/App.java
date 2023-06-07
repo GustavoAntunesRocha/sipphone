@@ -40,19 +40,6 @@ public class App extends Application {
             EpConfig epConfig = new EpConfig();
             ep.libInit(epConfig);
 
-            acc = AccountEntity.readAccountFromFile("account.ser");
-            if(acc == null) {
-                acc = new AccountEntity();
-                acc.setAccountConfigModel(new AccountConfigModel(
-                    "8351", "e5f9a03a83cb5de23b180181f15e2521", 
-                    "telefonia.orlac.local", "digest", "*", 0));
-                acc.setTransportConfigModel(new TransportConfigModel(
-                    5060, pjsip_transport_type_e.PJSIP_TRANSPORT_UDP));
-                acc.setId(1);
-                acc.setName("Account 1");
-                AccountEntity.writeAccountToFile(acc, "account.ser");
-            }
-
             // Create SIP transport. Error handling sample is shown
             TransportConfig sipTpConfig = new TransportConfig();
             sipTpConfig.setPort(acc.getTransportConfigModel().getPort());
@@ -93,15 +80,19 @@ public class App extends Application {
         });
         mainController.setMainWindow(mainWindow);
 
-        connectSipServer();
+        acc = AccountEntity.readAccountFromFile("account.ser");
+        if(acc != null)
+            connectSipServer();
          
     }
 
     public static void deleteLibrary(){
         try {
-            acc.delete();
-            ep.libDestroy();
-            ep.delete();
+            if(acc != null){
+                acc.delete();
+                ep.libDestroy();
+                ep.delete();
+            }
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -121,4 +112,13 @@ public class App extends Application {
     public static void main(String argv[]) {
         launch(argv);
     }
+
+    public static AccountEntity getAcc() {
+        return acc;
+    }
+
+    public static void setAcc(AccountEntity acc) {
+        App.acc = acc;
+    }
+    
 }

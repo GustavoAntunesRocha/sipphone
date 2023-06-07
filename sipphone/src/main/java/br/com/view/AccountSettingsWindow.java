@@ -1,5 +1,6 @@
 package br.com.view;
 
+import br.com.controller.AccountController;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -44,7 +45,7 @@ public class AccountSettingsWindow {
 
     @FXML
     private void handleSave() {
-        // TODO
+        AccountController.getInstance().handleSaveAccount();
     }
 
     @FXML
@@ -64,5 +65,22 @@ public class AccountSettingsWindow {
         this.accountPasswordField.setText(password);
     }
 
+    public TextField getAccountNameField() {
+        return accountNameField;
+    }
+
+    public TextField getAccountDomainField() {
+        return accountDomainField;
+    }
+
+    public TextField getAccountUsernameField() {
+        return accountUsernameField;
+    }
+
+    public PasswordField getAccountPasswordField() {
+        return accountPasswordField;
+    }
+
+    
 
 }
