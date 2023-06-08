@@ -68,9 +68,24 @@ public class AccountController {
                     5060, pjsip_transport_type_e.PJSIP_TRANSPORT_UDP));
                 accountEntity.setId(1);
                 accountEntity.setName(controller.getAccountNameField().getText());
+        if(App.getAcc() != null){
+            App.getAcc().delete();
+            MainController.getInstance().setAccountEntity(null);
+        }
         AccountEntity.writeAccountToFile(accountEntity, "account.ser");
         App.setAcc(accountEntity);
         App.connectSipServer();
+        Platform.runLater(() -> {
+            MainController.getInstance().updateAccountText();
+        });
+        this.stage.close();
+    }
+
+    public void handleDeleteAccount(){
+        App.deleteLibrary();
+        MainController.getInstance().setAccountEntity(null);
+        App.setAcc(null);
+        AccountEntity.deleteAccountFile("account.ser");
         Platform.runLater(() -> {
             MainController.getInstance().updateAccountText();
         });

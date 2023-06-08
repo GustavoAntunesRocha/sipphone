@@ -133,5 +133,12 @@ public class AccountEntity extends Account implements Serializable{
 		this.transportConfig = transportConfig;
 	}
 
+    public static void deleteAccountFile(String fileLocation) {
+		File file = new File(fileLocation);
+		if (file.exists()) {
+			file.delete();
+		}
+    }
+
 	
 }

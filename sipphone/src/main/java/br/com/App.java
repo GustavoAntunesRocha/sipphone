@@ -33,19 +33,22 @@ public class App extends Application {
         try {
             System.loadLibrary("pjsua2");
             System.out.println("Library loaded");
-            // Create endpoint
-            ep = new Endpoint();
-            ep.libCreate();
-            // Initialize endpoint
-            EpConfig epConfig = new EpConfig();
-            ep.libInit(epConfig);
-
-            // Create SIP transport. Error handling sample is shown
-            TransportConfig sipTpConfig = new TransportConfig();
-            sipTpConfig.setPort(acc.getTransportConfigModel().getPort());
-            ep.transportCreate(acc.getTransportConfigModel().getType(), sipTpConfig);
-            // Start the library
-            ep.libStart();
+            
+            //if(ep == null){
+                // Create endpoint
+                ep = new Endpoint();
+                ep.libCreate();
+                // Initialize endpoint
+                EpConfig epConfig = new EpConfig();
+                ep.libInit(epConfig);
+    
+                // Create SIP transport. Error handling sample is shown
+                TransportConfig sipTpConfig = new TransportConfig();
+                sipTpConfig.setPort(acc.getTransportConfigModel().getPort());
+                ep.transportCreate(acc.getTransportConfigModel().getType(), sipTpConfig);
+                // Start the library
+                ep.libStart();
+            //}
 
             AccountConfig acfg = new AccountConfig();
             acfg.setIdUri(
@@ -92,6 +95,7 @@ public class App extends Application {
                 acc.delete();
                 ep.libDestroy();
                 ep.delete();
+                acc = null;
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block

@@ -1,17 +1,18 @@
 package br.com.controller;
 
+import java.util.Optional;
+
 import br.com.App;
 import br.com.model.AccountEntity;
 import br.com.view.MainWindow;
 import javafx.application.Platform;
-
 
 public class MainController {
 
     private AccountEntity accountEntity;
     private MainWindow mainWindow;
     private static MainController instance;
-    
+
     private MainController() {
     }
 
@@ -26,27 +27,39 @@ public class MainController {
         this.accountEntity = accountEntity;
     }
 
-    public void updateAccountText(){
-        MainWindow.getInstance().setUsername(accountEntity.getAccountConfigModel().getUsername());
-        MainWindow.getInstance().setDomain(accountEntity.getAccountConfigModel().getDomain());
-        try {
-            MainWindow.getInstance().setStatus(MainController.getInstance().getAccountEntity().getInfo().getRegStatusText());
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    public void updateAccountText() {
+        if (accountEntity != null) {
+            try {
+                MainWindow.getInstance().setUsername(accountEntity.getAccountConfigModel().getUsername());
+                MainWindow.getInstance().setDomain(accountEntity.getAccountConfigModel().getDomain());
+                MainWindow.getInstance()
+                        .setStatus(MainController.getInstance().getAccountEntity().getInfo().getRegStatusText());
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            MainWindow.getInstance().setUsername("");
+            MainWindow.getInstance().setDomain("");
+            MainWindow.getInstance().setStatus("");
         }
     }
 
     public void setMainWindow(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
-        //mainWindow.setUsername(accountEntity.getAccountConfigModel().getUsername());
-        //mainWindow.setDomain(accountEntity.getAccountConfigModel().getDomain());
-        //mainWindow.setStatus("Offline");
-        /* mainWindow.setDateColumn(new TableColumn("Date"));
-        mainWindow.setNumberColumn(new TableColumn("Number"));
-        mainWindow.setDurationColumn(new TableColumn("Duration")); */
-        /* mainWindow.getCallHistoryTable().getColumns().addAll(mainWindow.getDateColumn(),
-                mainWindow.getNumberColumn(), mainWindow.getDurationColumn()); */
+        // mainWindow.setUsername(accountEntity.getAccountConfigModel().getUsername());
+        // mainWindow.setDomain(accountEntity.getAccountConfigModel().getDomain());
+        // mainWindow.setStatus("Offline");
+        /*
+         * mainWindow.setDateColumn(new TableColumn("Date"));
+         * mainWindow.setNumberColumn(new TableColumn("Number"));
+         * mainWindow.setDurationColumn(new TableColumn("Duration"));
+         */
+        /*
+         * mainWindow.getCallHistoryTable().getColumns().addAll(mainWindow.getDateColumn
+         * (),
+         * mainWindow.getNumberColumn(), mainWindow.getDurationColumn());
+         */
     }
 
     public static void handleExit() {

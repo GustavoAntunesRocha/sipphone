@@ -55,7 +55,7 @@ public class AccountSettingsWindow {
 
     @FXML
     private void handleDelete() {
-        // TODO
+        AccountController.getInstance().handleDeleteAccount();
     }
 
     public void setFields(String name, String domain, String username, String password) {
