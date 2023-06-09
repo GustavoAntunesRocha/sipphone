@@ -28,6 +28,16 @@ public class AccountEntity extends Account implements Serializable{
 
 	private TransportConfigModel transportConfig;
 
+	public enum Status {
+		ONLINE,
+		OFFLINE,
+		BUSY,
+		DISCONECTED,
+		AWAY
+	}
+
+	private Status status;
+
 	public AccountEntity() {}
 
 	public AccountEntity(int id, String name, AccountConfigModel accountConfig, TransportConfigModel transportConfig) {
@@ -42,6 +52,7 @@ public class AccountEntity extends Account implements Serializable{
 		try {
 			AccountInfo ai = getInfo();
 			System.out.println(ai.getRegIsActive() ? "\n\nRegister: code=" : "*** Unregister: code=" + prm.getCode());
+			this.status = ai.getRegIsActive() ? Status.ONLINE : Status.OFFLINE;
 			Platform.runLater(() -> {
 				if (ai.getRegIsActive()) {
 					MainController.getInstance().setAccountEntity(this);
@@ -139,6 +150,14 @@ public class AccountEntity extends Account implements Serializable{
 			file.delete();
 		}
     }
+
+	public String getStatus(){
+		return status.toString();
+	}
+
+	public void setStatus(Status status){
+		this.status = status;
+	}
 
 	
 }

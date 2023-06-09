@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -116,6 +117,14 @@ public class MainWindow {
     private void handleAccountSettings() {
         // Handle account settings menu item click
         AccountController.getInstance().handleAccountSettingsWindow();
+    }
+
+    @FXML
+    private void handlePresence(ActionEvent event) {
+        MenuItem menuItem = (MenuItem) event.getSource();
+        String menuItemText = menuItem.getText();
+        this.status.setText(menuItemText);
+        AccountController.getInstance().handlePresence(menuItemText);
     }
 
     public Text getUsername() {

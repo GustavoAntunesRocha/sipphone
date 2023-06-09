@@ -2,12 +2,16 @@ package br.com.controller;
 
 import java.io.IOException;
 
+import org.pjsip.pjsua2.PresenceStatus;
 import org.pjsip.pjsua2.pjsip_transport_type_e;
+import org.pjsip.pjsua2.pjsua_buddy_status;
+import org.pjsip.pjsua2.pjrpid_activity;
 
 import br.com.App;
 import br.com.model.AccountConfigModel;
 import br.com.model.AccountEntity;
 import br.com.model.TransportConfigModel;
+import br.com.model.AccountEntity.Status;
 import br.com.view.AccountSettingsWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -90,6 +94,40 @@ public class AccountController {
             MainController.getInstance().updateAccountText();
         });
         this.stage.close();
+    }
+
+    public void handlePresence(String menuItemText) {
+        PresenceStatus status = new PresenceStatus();
+        try {
+            switch (menuItemText) {
+                case "Online":
+                    status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
+                    App.getAcc().setOnlineStatus(status);
+                    App.getAcc().setStatus(Status.ONLINE);
+                    break;
+                case "Offline":
+                    status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_OFFLINE);
+                    App.getAcc().setOnlineStatus(status);
+                    App.getAcc().setStatus(Status.OFFLINE);
+                    break;
+                case "Away":
+                    status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
+                    status.setActivity(pjrpid_activity.PJRPID_ACTIVITY_AWAY);
+                    App.getAcc().setOnlineStatus(status);
+                    App.getAcc().setStatus(Status.AWAY);
+                    break;
+                case "Busy":
+                    status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
+                    status.setActivity(pjrpid_activity.PJRPID_ACTIVITY_BUSY);
+                    App.getAcc().setOnlineStatus(status);
+                    App.getAcc().setStatus(Status.BUSY);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

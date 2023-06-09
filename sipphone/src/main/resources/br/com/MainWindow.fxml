@@ -18,6 +18,11 @@
         <Menu text="File">
             <MenuItem onAction="#handleExit" text="Exit" />
         </Menu>
+        <Menu text="Presence">
+            <MenuItem onAction="#handlePresence" text="Online" />
+            <MenuItem onAction="#handlePresence" text="Busy" />
+            <MenuItem onAction="#handlePresence" text="Offline" />
+        </Menu>
         <Menu text="Help">
             <MenuItem onAction="#handleAbout" text="About" />
         </Menu>

@@ -33,7 +33,7 @@ public class MainController {
                 MainWindow.getInstance().setUsername(accountEntity.getAccountConfigModel().getUsername());
                 MainWindow.getInstance().setDomain(accountEntity.getAccountConfigModel().getDomain());
                 MainWindow.getInstance()
-                        .setStatus(MainController.getInstance().getAccountEntity().getInfo().getRegStatusText());
+                        .setStatus(MainController.getInstance().getAccountEntity().getStatus());
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
