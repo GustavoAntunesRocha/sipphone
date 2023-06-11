@@ -9,7 +9,6 @@ import javafx.application.Platform;
 
 public class MainController {
 
-    private AccountEntity accountEntity;
     private MainWindow mainWindow;
     private static MainController instance;
 
@@ -23,17 +22,14 @@ public class MainController {
         return instance;
     }
 
-    public void setAccountEntity(AccountEntity accountEntity) {
-        this.accountEntity = accountEntity;
-    }
-
     public void updateAccountText() {
+        AccountEntity accountEntity = AccountEntity.getInstance();
         if (accountEntity != null) {
             try {
                 MainWindow.getInstance().setUsername(accountEntity.getAccountConfigModel().getUsername());
                 MainWindow.getInstance().setDomain(accountEntity.getAccountConfigModel().getDomain());
                 MainWindow.getInstance()
-                        .setStatus(MainController.getInstance().getAccountEntity().getStatus());
+                        .setStatus(accountEntity.getStatus());
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -71,10 +67,6 @@ public class MainController {
     public void handleAbout() {
         // Handle about menu item click
         // Show about dialog
-    }
-
-    public AccountEntity getAccountEntity() {
-        return accountEntity;
     }
 
     public MainWindow getMainWindow() {

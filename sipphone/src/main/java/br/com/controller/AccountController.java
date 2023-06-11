@@ -40,7 +40,7 @@ public class AccountController {
     }
 
     public void handleAccountSettingsWindow() {
-        AccountEntity accountEntity = MainController.getInstance().getAccountEntity();
+        AccountEntity accountEntity = AccountEntity.getInstance();
         try {
             this.stage = new Stage();
             this.stage.setTitle("Account Settings");
@@ -50,7 +50,7 @@ public class AccountController {
                 AccountSettingsWindow controller = loader.getController();
                 controller.setFields(accountEntity.getName(), 
                     accountEntity.getAccountConfigModel().getDomain(), 
-                    accountEntity.getAccountConfigModel().getUsername(), 
+                    accountEntity.getAccountConfigModel().getUsername(),
                     accountEntity.getAccountConfigModel().getPassword());
             }
             this.scene = new Scene(root);
@@ -63,7 +63,7 @@ public class AccountController {
     }
 
     public void handleSaveAccount(){
-        AccountEntity accountEntity = new AccountEntity();
+        AccountEntity accountEntity = AccountEntity.getInstance();
         AccountSettingsWindow controller = loader.getController();
         accountEntity.setAccountConfigModel(new AccountConfigModel(
                     controller.getAccountUsernameField().getText(), controller.getAccountPasswordField().getText(), 
@@ -72,13 +72,8 @@ public class AccountController {
                     5060, pjsip_transport_type_e.PJSIP_TRANSPORT_UDP));
                 accountEntity.setId(1);
                 accountEntity.setName(controller.getAccountNameField().getText());
-        if(App.getAcc() != null){
-            App.getAcc().delete();
-            MainController.getInstance().setAccountEntity(null);
-        }
         AccountEntity.writeAccountToFile(accountEntity, "account.ser");
-        App.setAcc(accountEntity);
-        App.connectSipServer();
+        App.connectSipServer(accountEntity);
         Platform.runLater(() -> {
             MainController.getInstance().updateAccountText();
         });
@@ -87,8 +82,6 @@ public class AccountController {
 
     public void handleDeleteAccount(){
         App.deleteLibrary();
-        MainController.getInstance().setAccountEntity(null);
-        App.setAcc(null);
         AccountEntity.deleteAccountFile("account.ser");
         Platform.runLater(() -> {
             MainController.getInstance().updateAccountText();
@@ -98,29 +91,30 @@ public class AccountController {
 
     public void handlePresence(String menuItemText) {
         PresenceStatus status = new PresenceStatus();
+        AccountEntity accountEntity = AccountEntity.getInstance();
         try {
             switch (menuItemText) {
                 case "Online":
                     status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
-                    App.getAcc().setOnlineStatus(status);
-                    App.getAcc().setStatus(Status.ONLINE);
+                    accountEntity.setOnlineStatus(status);
+                    accountEntity.setStatus(Status.ONLINE);
                     break;
                 case "Offline":
                     status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_OFFLINE);
-                    App.getAcc().setOnlineStatus(status);
-                    App.getAcc().setStatus(Status.OFFLINE);
+                    accountEntity.setOnlineStatus(status);
+                    accountEntity.setStatus(Status.OFFLINE);
                     break;
                 case "Away":
                     status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
                     status.setActivity(pjrpid_activity.PJRPID_ACTIVITY_AWAY);
-                    App.getAcc().setOnlineStatus(status);
-                    App.getAcc().setStatus(Status.AWAY);
+                    accountEntity.setOnlineStatus(status);
+                    accountEntity.setStatus(Status.AWAY);
                     break;
                 case "Busy":
                     status.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
                     status.setActivity(pjrpid_activity.PJRPID_ACTIVITY_BUSY);
-                    App.getAcc().setOnlineStatus(status);
-                    App.getAcc().setStatus(Status.BUSY);
+                    accountEntity.setOnlineStatus(status);
+                    accountEntity.setStatus(Status.BUSY);
                     break;
                 default:
                     break;

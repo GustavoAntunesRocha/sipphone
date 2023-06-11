@@ -8,6 +8,9 @@ public class TransportConfigModel extends TransportConfig implements Serializabl
     
     private int port;
     private int type;
+
+    public TransportConfigModel() {
+    }
     
     public TransportConfigModel(int port, int type) {
         this.port = port;

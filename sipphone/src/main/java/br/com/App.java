@@ -23,10 +23,9 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     private static Scene scene;
-    private static AccountEntity acc;
     private static Endpoint ep;
 
-    public static void connectSipServer(){
+    public static void connectSipServer(AccountEntity acc){
         try {
             System.loadLibrary("pjsua2");
             System.out.println("Library loaded");
@@ -76,6 +75,9 @@ public class App extends Application {
         scene = new Scene(loadFXML("MainWindow"));
         stage.setScene(scene);
         stage.show();
+
+        AccountEntity acc = AccountEntity.getInstance();
+
         stage.setOnCloseRequest(event -> {
             deleteLibrary();
         });
@@ -83,18 +85,17 @@ public class App extends Application {
 
         acc = AccountEntity.readAccountFromFile("account.ser");
         if(acc != null)
-            connectSipServer();
+            connectSipServer(acc);
          
     }
 
     public static void deleteLibrary(){
         try {
-            if(acc != null){
-                acc.delete();
-                ep.libDestroy();
-                ep.delete();
-                acc = null;
-            }
+            AccountEntity acc = AccountEntity.getInstance();
+            acc.delete();
+            ep.libDestroy();
+            ep.delete();
+            acc.removeAccount();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -113,14 +114,6 @@ public class App extends Application {
 
     public static void main(String argv[]) {
         launch(argv);
-    }
-
-    public static AccountEntity getAcc() {
-        return acc;
-    }
-
-    public static void setAcc(AccountEntity acc) {
-        App.acc = acc;
     }
     
 }

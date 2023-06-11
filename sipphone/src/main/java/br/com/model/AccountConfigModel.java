@@ -13,6 +13,9 @@ public class AccountConfigModel extends AccountConfig implements Serializable{
     private String realm;
     private int data_type;
 
+    public AccountConfigModel() {
+    }
+
 
     public AccountConfigModel(String username, String password, String domain, String scheme, String realm, int data_type) {
         this.username = username;
