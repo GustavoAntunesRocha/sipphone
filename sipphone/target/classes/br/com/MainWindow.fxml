@@ -13,7 +13,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="341.0" prefWidth="317.0" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.MainWindow">
+
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.MainWindow">
     <MenuBar>
         <Menu text="File">
             <MenuItem onAction="#handleExit" text="Exit" />
@@ -28,7 +29,7 @@
         </Menu>
       <Menu mnemonicParsing="false" text="Settings">
         <items>
-          <MenuItem onAction="#handleAccountSettings" mnemonicParsing="false" text="Account" />
+          <MenuItem mnemonicParsing="false" onAction="#handleAccountSettings" text="Account" />
         </items>
       </Menu>
     </MenuBar>
@@ -54,7 +55,7 @@
             </GridPane>
         </VBox>
     </HBox>
-   <VBox prefHeight="200.0" prefWidth="100.0">
+   <VBox cacheShape="false" centerShape="false" minHeight="200.0" minWidth="263.0" prefHeight="200.0" prefWidth="100.0" scaleShape="false">
       <children>
             <Label text="Call Controls" />
          <TextField fx:id="numberField" />
@@ -89,4 +90,4 @@
       </children>
    </VBox>
     
-</VBox>
+      </VBox>

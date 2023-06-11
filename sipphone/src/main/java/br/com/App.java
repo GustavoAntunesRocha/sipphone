@@ -7,12 +7,9 @@ import org.pjsip.pjsua2.AuthCredInfo;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.EpConfig;
 import org.pjsip.pjsua2.TransportConfig;
-import org.pjsip.pjsua2.pjsip_transport_type_e;
 
 import br.com.controller.MainController;
-import br.com.model.AccountConfigModel;
 import br.com.model.AccountEntity;
-import br.com.model.TransportConfigModel;
 import br.com.view.MainWindow;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -74,8 +71,9 @@ public class App extends Application {
 
         MainController mainController = MainController.getInstance();
         MainWindow mainWindow = MainWindow.getInstance();
-        
-        scene = new Scene(loadFXML("MainWindow"), 640, 480);
+        stage.setMinHeight(361);
+        stage.setMinWidth(331);
+        scene = new Scene(loadFXML("MainWindow"));
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(event -> {
