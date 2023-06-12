@@ -27,24 +27,13 @@ public class App extends Application {
 
     public static void connectSipServer(AccountEntity acc){
         try {
-            System.loadLibrary("pjsua2");
-            System.out.println("Library loaded");
             
-            //if(ep == null){
-                // Create endpoint
-                ep = new Endpoint();
-                ep.libCreate();
-                // Initialize endpoint
-                EpConfig epConfig = new EpConfig();
-                ep.libInit(epConfig);
-    
-                // Create SIP transport. Error handling sample is shown
+            // Create SIP transport. Error handling sample is shown
                 TransportConfig sipTpConfig = new TransportConfig();
                 sipTpConfig.setPort(acc.getTransportConfigModel().getPort());
                 ep.transportCreate(acc.getTransportConfigModel().getType(), sipTpConfig);
                 // Start the library
                 ep.libStart();
-            //}
 
             AccountConfig acfg = new AccountConfig();
             acfg.setIdUri(
@@ -65,8 +54,30 @@ public class App extends Application {
         }
     }
 
+    private static void initLibrary(){
+        System.loadLibrary("pjsua2");
+            System.out.println("Library loaded");
+            
+            //if(ep == null){
+                // Create endpoint
+                ep = new Endpoint();
+                try {
+                    ep.libCreate();
+                    // Initialize endpoint
+                    EpConfig epConfig = new EpConfig();
+                    ep.libInit(epConfig);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+    
+                
+            //}
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
+        initLibrary();
 
         MainController mainController = MainController.getInstance();
         MainWindow mainWindow = MainWindow.getInstance();

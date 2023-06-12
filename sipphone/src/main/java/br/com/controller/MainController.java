@@ -24,7 +24,7 @@ public class MainController {
 
     public void updateAccountText() {
         AccountEntity accountEntity = AccountEntity.getInstance();
-        if (accountEntity != null) {
+        if (accountEntity.getName() != null) {
             try {
                 MainWindow.getInstance().setUsername(accountEntity.getAccountConfigModel().getUsername());
                 MainWindow.getInstance().setDomain(accountEntity.getAccountConfigModel().getDomain());
