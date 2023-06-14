@@ -95,6 +95,8 @@ public class App extends Application {
         mainController.setMainWindow(mainWindow);
 
         acc = AccountEntity.readAccountFromFile("account.ser");
+        mainController.loadCallHistory();
+        
         if(acc != null)
             connectSipServer(acc);
          

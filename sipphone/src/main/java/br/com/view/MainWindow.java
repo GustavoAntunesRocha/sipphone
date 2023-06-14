@@ -1,17 +1,20 @@
 package br.com.view;
 
-import br.com.App;
 import br.com.controller.AccountController;
 import br.com.controller.CallController;
 import br.com.controller.MainController;
+import br.com.model.AccountEntity;
+import br.com.model.CallHistoryEntry;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 
 public class MainWindow {
@@ -31,7 +34,33 @@ public class MainWindow {
     @FXML
     private Button callButton;
 
+    @FXML
+    private TableView<CallHistoryEntry> callHistoryTable;
+
+    @FXML
+    private TableColumn<CallHistoryEntry, String> name;
+
+    @FXML
+    private TableColumn<CallHistoryEntry, String> number;
+
+    @FXML
+    private TableColumn<CallHistoryEntry, String> date;
+
+    @FXML
+    private TableColumn<CallHistoryEntry, String> duration;
+
+    @FXML
+    private TableColumn<CallHistoryEntry, String> info;
+
     private static MainWindow instance;
+
+    public void initialize() {
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        number.setCellValueFactory(new PropertyValueFactory<>("number"));
+        date.setCellValueFactory(new PropertyValueFactory<>("date"));
+        duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        callHistoryTable.setItems(FXCollections.observableList(AccountEntity.getInstance().getCallHistory()));
+    }
 
     public static MainWindow getInstance() {
         if (instance == null) {
@@ -46,20 +75,9 @@ public class MainWindow {
         status = new Text();
         numberField = new TextField();
         callButton = new Button();
+        callHistoryTable = new TableView<CallHistoryEntry>();
         instance = this;
     }
-
-    /* @FXML
-    private TableView callHistoryTable;
-
-    @FXML
-    private TableColumn dateColumn;
-
-    @FXML
-    private TableColumn numberColumn;
-
-    @FXML
-    private TableColumn durationColumn; */
 
     public void setUsername(String username) {
         this.username.setText(username);
@@ -73,21 +91,15 @@ public class MainWindow {
         this.status.setText(status);
     }
 
-    /* public void setCallHistoryTable(TableView callHistoryTable) {
-        this.callHistoryTable = callHistoryTable;
+    public void addCallHistoryEntry(String name, String number, String date, String duration, String info) {
+        CallHistoryEntry entry = new CallHistoryEntry(name, number, date, duration, info);
+        callHistoryTable.getItems().add(entry);
     }
 
-    public void setDateColumn(TableColumn dateColumn) {
-        this.dateColumn = dateColumn;
+    public void updateCallHistoryTable() {
+        ObservableList<CallHistoryEntry> callHistoryList = FXCollections.observableArrayList(AccountEntity.getInstance().getCallHistory());
+        callHistoryTable.setItems(callHistoryList);
     }
-
-    public void setNumberColumn(TableColumn numberColumn) {
-        this.numberColumn = numberColumn;
-    }
-
-    public void setDurationColumn(TableColumn durationColumn) {
-        this.durationColumn = durationColumn;
-    } */
 
     @FXML
     private void handleCall() {

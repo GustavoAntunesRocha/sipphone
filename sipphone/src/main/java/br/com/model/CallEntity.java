@@ -1,5 +1,15 @@
 package br.com.model;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.pjsip.pjsua2.AudDevManager;
 import org.pjsip.pjsua2.AudioMedia;
 import org.pjsip.pjsua2.Call;
@@ -14,10 +24,12 @@ import org.pjsip.pjsua2.pjmedia_type;
 import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsua_call_media_status;
 
+import br.com.controller.AccountController;
 import br.com.controller.CallController;
+import br.com.controller.MainController;
 import br.com.view.CallWindow;
 
-public class CallEntity extends Call{
+public class CallEntity extends Call {
 
     private boolean connected;
     private boolean onHold;
@@ -33,17 +45,18 @@ public class CallEntity extends Call{
         connected = false;
         onHold = false;
     }
-    
+
     @Override
     public void onCallState(OnCallStateParam prm) {
         try {
             CallInfo ci = getInfo();
-            if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CALLING){
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CALLING) {
                 CallController.getInstance().showCallingAlert();
             }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
-                if(CallController.getInstance().getAlert() != null)
+                if (CallController.getInstance().getAlert() != null)
                     CallController.getInstance().closeAlertWindow();
+                MainController.getInstance().addCallHistoryEntry(AccountController.getInstance().addCallHistoryEntry(this));
                 CallController.getInstance().closeCallWindow();
                 delete();
                 connected = false;
@@ -52,7 +65,7 @@ public class CallEntity extends Call{
                 CallWindow callWindow = new CallWindow();
                 callWindow.setCallerNumber(ci.getRemoteUri());
                 callWindow.setCallerName(ci.getRemoteContact());
-                callController.setCallWindow(callWindow , ci.getRemoteUri(), ci.getRemoteContact());
+                callController.setCallWindow(callWindow, ci.getRemoteUri(), ci.getRemoteContact());
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -61,11 +74,12 @@ public class CallEntity extends Call{
     }
 
     @Override
-    public void onCallMediaState(OnCallMediaStateParam prm){
+    public void onCallMediaState(OnCallMediaStateParam prm) {
         try {
             CallInfo ci = getInfo();
             for (CallMediaInfo mi : ci.getMedia()) {
-                if(mi.getType() == pjmedia_type.PJMEDIA_TYPE_AUDIO && mi.getStatus() == pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE){
+                if (mi.getType() == pjmedia_type.PJMEDIA_TYPE_AUDIO
+                        && mi.getStatus() == pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE) {
                     Media media = getMedia(mi.getIndex());
                     AudioMedia audioMedia = AudioMedia.typecastFromMedia(media);
                     AudDevManager audDevManager = Endpoint.instance().audDevManager();
@@ -79,17 +93,17 @@ public class CallEntity extends Call{
         }
     }
 
-    public static CallEntity makeCall(AccountEntity accountEntity, String number){
+    public static CallEntity makeCall(AccountEntity accountEntity, String number) {
         CallEntity call = new CallEntity(accountEntity);
         CallOpParam prm = new CallOpParam(true);
         try {
             call.makeCall("sip:" + number + "@" + accountEntity.getAccountConfigModel().getDomain(), prm);
-            //System.out.println("\n\n\n\n\nCall id: " + call.getId() + "\n\n");
+            // System.out.println("\n\n\n\n\nCall id: " + call.getId() + "\n\n");
             CallController.getInstance().setCallEntity(call);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return call;
     }
-    
+
 }

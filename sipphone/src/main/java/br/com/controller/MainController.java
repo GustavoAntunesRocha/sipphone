@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import br.com.App;
 import br.com.model.AccountEntity;
+import br.com.model.CallHistoryEntry;
 import br.com.view.MainWindow;
 import javafx.application.Platform;
 
@@ -39,6 +40,36 @@ public class MainController {
             MainWindow.getInstance().setDomain("");
             MainWindow.getInstance().setStatus("");
         }
+    }
+
+    public void loadCallHistory() {
+        AccountEntity accountEntity = AccountEntity.getInstance();
+        if (accountEntity.getName() != null) {
+            try {
+                for (CallHistoryEntry callHistoryEntry : accountEntity.getCallHistory()) {
+                    addCallHistoryEntry(callHistoryEntry);
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    
+
+    public void addCallHistoryEntry(CallHistoryEntry callHistoryEntry) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                /* MainWindow.getInstance().addCallHistoryEntry(callHistoryEntry.getName(),
+                        callHistoryEntry.getNumber(),
+                        callHistoryEntry.getDate(),
+                        callHistoryEntry.getDuration(),
+                        callHistoryEntry.getInfo()); */
+                MainWindow.getInstance().updateCallHistoryTable();
+            }
+        });
     }
 
     public void setMainWindow(MainWindow mainWindow) {

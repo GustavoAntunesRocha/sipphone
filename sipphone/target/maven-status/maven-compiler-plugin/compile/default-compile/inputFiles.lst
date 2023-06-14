@@ -42,6 +42,7 @@
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pjsua_state.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/OnTransportStateParam.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/SipMultipartPartVector.java
+/home/gustavo/programacao/sipphone/sipphone/src/main/java/br/com/model/CallHistoryEntry.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pj_ssl_cert_verify_flag_t.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pjsua2.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/pjmedia_tp_proto.java

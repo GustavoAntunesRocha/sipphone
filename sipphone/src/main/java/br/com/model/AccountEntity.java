@@ -1,11 +1,15 @@
 package br.com.model;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.pjsip.pjsua2.Account;
 import org.pjsip.pjsua2.AccountInfo;
@@ -18,7 +22,7 @@ import br.com.controller.MainController;
 import br.com.view.MainWindow;
 import javafx.application.Platform;
 
-public class AccountEntity extends Account implements Serializable{
+public class AccountEntity extends Account implements Serializable {
 
 	private int id;
 
@@ -30,6 +34,8 @@ public class AccountEntity extends Account implements Serializable{
 
 	private static AccountEntity instance;
 
+	private List<CallHistoryEntry> callHistory;
+
 	public enum Status {
 		ONLINE,
 		OFFLINE,
@@ -40,17 +46,19 @@ public class AccountEntity extends Account implements Serializable{
 
 	private Status status;
 
-	private AccountEntity() {}
+	private AccountEntity() {
+	}
 
 	public static synchronized AccountEntity getInstance() {
-        if (instance == null) {
-            instance = new AccountEntity();
+		if (instance == null) {
+			instance = new AccountEntity();
 			instance.setAccountConfigModel(new AccountConfigModel());
 			instance.setTransportConfigModel(new TransportConfigModel());
-        }
-        return instance;
-    }
-	
+			instance.setCallHistory(new ArrayList<>());
+		}
+		return instance;
+	}
+
 	@Override
 	public void onRegState(OnRegStateParam prm) {
 		try {
@@ -69,7 +77,7 @@ public class AccountEntity extends Account implements Serializable{
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void onIncomingCall(OnIncomingCallParam prm) {
 		try {
@@ -93,6 +101,7 @@ public class AccountEntity extends Account implements Serializable{
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeObject(accountEntity);
+			objectOutputStream.writeObject(accountEntity.getCallHistory());
 			objectOutputStream.close();
 			fileOutputStream.close();
 		} catch (Exception e) {
@@ -101,18 +110,20 @@ public class AccountEntity extends Account implements Serializable{
 	}
 
 	public static AccountEntity readAccountFromFile(String filePath) {
+		AccountEntity accountEntity = null;
 		try {
 			File file = new File(filePath);
 			FileInputStream fileInputStream = new FileInputStream(file);
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			AccountEntity accountEntity = (AccountEntity) objectInputStream.readObject();
+			accountEntity = (AccountEntity) objectInputStream.readObject();
+			List<CallHistoryEntry> callHistory = (List<CallHistoryEntry>) objectInputStream.readObject();
+			accountEntity.setCallHistory(callHistory);
 			objectInputStream.close();
 			fileInputStream.close();
-			return accountEntity;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return accountEntity;
 	}
 
 	public void removeAccount() {
@@ -151,20 +162,52 @@ public class AccountEntity extends Account implements Serializable{
 		this.transportConfig = transportConfig;
 	}
 
-    public static void deleteAccountFile(String fileLocation) {
+	public static void deleteAccountFile(String fileLocation) {
 		File file = new File(fileLocation);
 		if (file.exists()) {
 			file.delete();
 		}
-    }
+	}
 
-	public String getStatus(){
+	public String getStatus() {
 		return status.toString();
 	}
 
-	public void setStatus(Status status){
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
-	
+	public List<CallHistoryEntry> getCallHistory() {
+		return callHistory;
+	}
+
+	public void setCallHistory(List<CallHistoryEntry> callHistory) {
+		this.callHistory = callHistory;
+	}
+
+	public void addCallHistoryEntry(CallHistoryEntry callHistoryEntry) {
+		this.callHistory.add(callHistoryEntry);
+	}
+
+	/*
+	 * public void loadCallHistory() {
+	 * List<CallHistoryEntry> callHistory = new ArrayList<>();
+	 * try {
+	 * FileInputStream fileIn = new FileInputStream("call_history.bin");
+	 * ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+	 * while (fileIn.available() > 0) {
+	 * CallHistoryEntry callHistoryEntry = (CallHistoryEntry) objectIn.readObject();
+	 * callHistory.add(callHistoryEntry);
+	 * }
+	 * objectIn.close();
+	 * fileIn.close();
+	 * } catch (EOFException e) {
+	 * // End of file reached, do nothing
+	 * } catch (IOException | ClassNotFoundException e) {
+	 * e.printStackTrace();
+	 * }
+	 * this.callHistory = callHistory;
+	 * }
+	 */
+
 }

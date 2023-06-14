@@ -1,6 +1,7 @@
 package br.com.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 
 import org.pjsip.pjsua2.PresenceStatus;
 import org.pjsip.pjsua2.pjsip_transport_type_e;
@@ -10,8 +11,10 @@ import org.pjsip.pjsua2.pjrpid_activity;
 import br.com.App;
 import br.com.model.AccountConfigModel;
 import br.com.model.AccountEntity;
+import br.com.model.CallEntity;
 import br.com.model.TransportConfigModel;
 import br.com.model.AccountEntity.Status;
+import br.com.model.CallHistoryEntry;
 import br.com.view.AccountSettingsWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -124,4 +127,19 @@ public class AccountController {
         }
     }
 
+    public CallHistoryEntry addCallHistoryEntry(CallEntity call){
+        try {
+            CallHistoryEntry callHistoryEntry = new CallHistoryEntry(call.getInfo().getRemoteUri(),
+                        call.getInfo().getRemoteUri(), new Date(System.currentTimeMillis()).toString(),
+                        Integer.toString(call.getInfo().getConnectDuration().getSec()),
+                        call.getInfo().getLastReason());
+            AccountEntity.getInstance().addCallHistoryEntry(callHistoryEntry);
+            AccountEntity.writeAccountToFile(AccountEntity.getInstance(), "account.ser");
+            return callHistoryEntry;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
