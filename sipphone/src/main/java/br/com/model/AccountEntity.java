@@ -17,6 +17,7 @@ import org.pjsip.pjsua2.CallOpParam;
 import org.pjsip.pjsua2.OnIncomingCallParam;
 import org.pjsip.pjsua2.OnRegStateParam;
 
+import br.com.App;
 import br.com.controller.CallController;
 import br.com.controller.MainController;
 import br.com.view.MainWindow;
@@ -52,6 +53,7 @@ public class AccountEntity extends Account implements Serializable {
 	public static synchronized AccountEntity getInstance() {
 		if (instance == null) {
 			instance = new AccountEntity();
+			instance.setId(0);
 			instance.setAccountConfigModel(new AccountConfigModel());
 			instance.setTransportConfigModel(new TransportConfigModel());
 			instance.setCallHistory(new ArrayList<>());
@@ -63,7 +65,7 @@ public class AccountEntity extends Account implements Serializable {
 	public void onRegState(OnRegStateParam prm) {
 		try {
 			AccountInfo ai = getInfo();
-			System.out.println(ai.getRegIsActive() ? "\n\nRegister: code=" : "*** Unregister: code=" + prm.getCode());
+			System.out.println(ai.getRegIsActive() ? "\n\n\n\nRegister: code=" : "*** Unregister: code=" + prm.getCode()+"\n\n\n");
 			this.status = ai.getRegIsActive() ? Status.ONLINE : Status.OFFLINE;
 			Platform.runLater(() -> {
 				if (ai.getRegIsActive()) {
@@ -95,12 +97,14 @@ public class AccountEntity extends Account implements Serializable {
 		}
 	}
 
-	public static void writeAccountToFile(AccountEntity accountEntity, String filePath) {
+	public static void writeAccountToFile(AccountEntity accountEntity) {
 		try {
-			File file = new File(filePath);
+			File file = new File(App.ACC_FILE_PATH);
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 			objectOutputStream.writeObject(accountEntity);
+			objectOutputStream.writeObject(accountEntity.getAccountConfigModel());
+			objectOutputStream.writeObject(accountEntity.getTransportConfigModel());
 			objectOutputStream.writeObject(accountEntity.getCallHistory());
 			objectOutputStream.close();
 			fileOutputStream.close();
@@ -109,13 +113,15 @@ public class AccountEntity extends Account implements Serializable {
 		}
 	}
 
-	public static AccountEntity readAccountFromFile(String filePath) {
+	public static AccountEntity readAccountFromFile() {
 		AccountEntity accountEntity = null;
 		try {
-			File file = new File(filePath);
+			File file = new File(App.ACC_FILE_PATH);
 			FileInputStream fileInputStream = new FileInputStream(file);
 			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 			accountEntity = (AccountEntity) objectInputStream.readObject();
+			accountEntity.setAccountConfigModel((AccountConfigModel) objectInputStream.readObject());
+			accountEntity.setTransportConfigModel((TransportConfigModel) objectInputStream.readObject());
 			List<CallHistoryEntry> callHistory = (List<CallHistoryEntry>) objectInputStream.readObject();
 			accountEntity.setCallHistory(callHistory);
 			objectInputStream.close();
@@ -162,8 +168,8 @@ public class AccountEntity extends Account implements Serializable {
 		this.transportConfig = transportConfig;
 	}
 
-	public static void deleteAccountFile(String fileLocation) {
-		File file = new File(fileLocation);
+	public static void deleteAccountFile() {
+		File file = new File(App.ACC_FILE_PATH);
 		if (file.exists()) {
 			file.delete();
 		}

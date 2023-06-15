@@ -73,9 +73,9 @@ public class AccountController {
                     controller.getAccountDomainField().getText(), "digest", "*", 0));
                 accountEntity.setTransportConfigModel(new TransportConfigModel(
                     5060, pjsip_transport_type_e.PJSIP_TRANSPORT_UDP));
-                accountEntity.setId(1);
+                accountEntity.setId(0);
                 accountEntity.setName(controller.getAccountNameField().getText());
-        AccountEntity.writeAccountToFile(accountEntity, "account.ser");
+        AccountEntity.writeAccountToFile(accountEntity);
         App.connectSipServer(accountEntity);
         Platform.runLater(() -> {
             MainController.getInstance().updateAccountText();
@@ -85,7 +85,7 @@ public class AccountController {
 
     public void handleDeleteAccount(){
         App.deleteLibrary();
-        AccountEntity.deleteAccountFile("account.ser");
+        AccountEntity.deleteAccountFile();
         Platform.runLater(() -> {
             MainController.getInstance().updateAccountText();
         });
@@ -134,7 +134,7 @@ public class AccountController {
                         Integer.toString(call.getInfo().getConnectDuration().getSec()),
                         call.getInfo().getLastReason());
             AccountEntity.getInstance().addCallHistoryEntry(callHistoryEntry);
-            AccountEntity.writeAccountToFile(AccountEntity.getInstance(), "account.ser");
+            AccountEntity.writeAccountToFile(AccountEntity.getInstance());
             return callHistoryEntry;
         } catch (Exception e) {
             // TODO Auto-generated catch block

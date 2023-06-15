@@ -7,9 +7,11 @@ import org.pjsip.pjsua2.AuthCredInfo;
 import org.pjsip.pjsua2.Endpoint;
 import org.pjsip.pjsua2.EpConfig;
 import org.pjsip.pjsua2.TransportConfig;
+import org.pjsip.pjsua2.pjsip_transport_type_e;
 
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
+import br.com.model.CallHistoryEntry;
 import br.com.view.MainWindow;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,13 +27,15 @@ public class App extends Application {
     private static Scene scene;
     private static Endpoint ep;
 
+    public final static String ACC_FILE_PATH = "account.bin";
+
     public static void connectSipServer(AccountEntity acc){
         try {
             
             // Create SIP transport. Error handling sample is shown
                 TransportConfig sipTpConfig = new TransportConfig();
-                sipTpConfig.setPort(acc.getTransportConfigModel().getPort());
-                ep.transportCreate(acc.getTransportConfigModel().getType(), sipTpConfig);
+                sipTpConfig.setPort(5060);
+                ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
                 // Start the library
                 ep.libStart();
 
@@ -39,14 +43,17 @@ public class App extends Application {
             acfg.setIdUri(
                     "sip:" + acc.getAccountConfigModel().getUsername() + "@" + acc.getAccountConfigModel().getDomain());
             acfg.getRegConfig().setRegistrarUri("sip:" + acc.getAccountConfigModel().getDomain());
+
+
             AuthCredInfo cred = new AuthCredInfo(acc.getAccountConfigModel().getScheme(),
                     acc.getAccountConfigModel().getRealm(), acc.getAccountConfigModel().getUsername(),
                     0, acc.getAccountConfigModel().getPassword());
+
+
             acfg.getSipConfig().getAuthCreds().add(cred);
             // Create the account
 
             acc.create(acfg);
-
 
         } catch (Exception e) {
             System.out.println(e);
@@ -87,16 +94,22 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
 
-        AccountEntity acc = AccountEntity.getInstance();
-
+        mainController.addCallHistoryEntry(null);
+        
         stage.setOnCloseRequest(event -> {
             deleteLibrary();
         });
         mainController.setMainWindow(mainWindow);
 
-        acc = AccountEntity.readAccountFromFile("account.ser");
-        mainController.loadCallHistory();
-        
+        AccountEntity acc = AccountEntity.getInstance();
+        acc = AccountEntity.readAccountFromFile();
+
+        if(acc != null){
+            for (CallHistoryEntry entry : acc.getCallHistory()) {
+                System.out.println("\n\nCall history: " + entry.getName());
+            }
+        }
+                
         if(acc != null)
             connectSipServer(acc);
          

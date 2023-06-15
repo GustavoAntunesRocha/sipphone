@@ -75,7 +75,7 @@ public class MainWindow {
         status = new Text();
         numberField = new TextField();
         callButton = new Button();
-        callHistoryTable = new TableView<CallHistoryEntry>();
+        //callHistoryTable = new TableView<CallHistoryEntry>();
         instance = this;
     }
 
