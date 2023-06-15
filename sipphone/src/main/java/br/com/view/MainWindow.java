@@ -1,5 +1,6 @@
 package br.com.view;
 
+import br.com.App;
 import br.com.controller.AccountController;
 import br.com.controller.CallController;
 import br.com.controller.MainController;
@@ -59,7 +60,7 @@ public class MainWindow {
         number.setCellValueFactory(new PropertyValueFactory<>("number"));
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
         duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
-        callHistoryTable.setItems(FXCollections.observableList(AccountEntity.getInstance().getCallHistory()));
+        callHistoryTable.setItems(FXCollections.observableList(App.acc.getCallHistory()));
     }
 
     public static MainWindow getInstance() {
@@ -97,7 +98,7 @@ public class MainWindow {
     }
 
     public void updateCallHistoryTable() {
-        ObservableList<CallHistoryEntry> callHistoryList = FXCollections.observableArrayList(AccountEntity.getInstance().getCallHistory());
+        ObservableList<CallHistoryEntry> callHistoryList = FXCollections.observableArrayList(App.acc.getCallHistory());
         callHistoryTable.setItems(callHistoryList);
     }
 

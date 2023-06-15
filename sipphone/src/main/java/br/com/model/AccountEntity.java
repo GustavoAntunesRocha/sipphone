@@ -1,10 +1,8 @@
 package br.com.model;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -20,7 +18,6 @@ import org.pjsip.pjsua2.OnRegStateParam;
 import br.com.App;
 import br.com.controller.CallController;
 import br.com.controller.MainController;
-import br.com.view.MainWindow;
 import javafx.application.Platform;
 
 public class AccountEntity extends Account implements Serializable {
@@ -32,8 +29,6 @@ public class AccountEntity extends Account implements Serializable {
 	private AccountConfigModel accountConfig;
 
 	private TransportConfigModel transportConfig;
-
-	private static AccountEntity instance;
 
 	private List<CallHistoryEntry> callHistory;
 
@@ -47,25 +42,20 @@ public class AccountEntity extends Account implements Serializable {
 
 	private Status status;
 
-	private AccountEntity() {
-	}
-
-	public static synchronized AccountEntity getInstance() {
-		if (instance == null) {
-			instance = new AccountEntity();
-			instance.setId(0);
-			instance.setAccountConfigModel(new AccountConfigModel());
-			instance.setTransportConfigModel(new TransportConfigModel());
-			instance.setCallHistory(new ArrayList<>());
-		}
-		return instance;
+	public AccountEntity() {
+		super();
+		this.id = 0;
+		this.accountConfig = new AccountConfigModel();
+		this.transportConfig = new TransportConfigModel();
+		this.callHistory = new ArrayList<>();
 	}
 
 	@Override
 	public void onRegState(OnRegStateParam prm) {
 		try {
 			AccountInfo ai = getInfo();
-			System.out.println(ai.getRegIsActive() ? "\n\n\n\nRegister: code=" : "*** Unregister: code=" + prm.getCode()+"\n\n\n");
+			System.out.println(ai.getRegIsActive() ? "\n\n\n\nRegister: code="
+					: "*** Unregister: code=" + prm.getCode() + "\n\n\n");
 			this.status = ai.getRegIsActive() ? Status.ONLINE : Status.OFFLINE;
 			Platform.runLater(() -> {
 				if (ai.getRegIsActive()) {
@@ -114,7 +104,7 @@ public class AccountEntity extends Account implements Serializable {
 	}
 
 	public static AccountEntity readAccountFromFile() {
-		AccountEntity accountEntity = null;
+		AccountEntity accountEntity = App.acc;
 		try {
 			File file = new File(App.ACC_FILE_PATH);
 			FileInputStream fileInputStream = new FileInputStream(file);
@@ -132,9 +122,11 @@ public class AccountEntity extends Account implements Serializable {
 		return accountEntity;
 	}
 
-	public void removeAccount() {
-		instance = null;
-	}
+	/*
+	 * public void removeAccount() {
+	 * instance = null;
+	 * }
+	 */
 
 	public int getId() {
 		return id;

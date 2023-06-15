@@ -43,7 +43,7 @@ public class AccountController {
     }
 
     public void handleAccountSettingsWindow() {
-        AccountEntity accountEntity = AccountEntity.getInstance();
+        AccountEntity accountEntity = App.acc;
         try {
             this.stage = new Stage();
             this.stage.setTitle("Account Settings");
@@ -66,7 +66,7 @@ public class AccountController {
     }
 
     public void handleSaveAccount(){
-        AccountEntity accountEntity = AccountEntity.getInstance();
+        AccountEntity accountEntity = App.acc;
         AccountSettingsWindow controller = loader.getController();
         accountEntity.setAccountConfigModel(new AccountConfigModel(
                     controller.getAccountUsernameField().getText(), controller.getAccountPasswordField().getText(), 
@@ -76,7 +76,7 @@ public class AccountController {
                 accountEntity.setId(0);
                 accountEntity.setName(controller.getAccountNameField().getText());
         AccountEntity.writeAccountToFile(accountEntity);
-        App.connectSipServer(accountEntity);
+        App.connectSipServer();
         Platform.runLater(() -> {
             MainController.getInstance().updateAccountText();
         });
@@ -94,7 +94,7 @@ public class AccountController {
 
     public void handlePresence(String menuItemText) {
         PresenceStatus status = new PresenceStatus();
-        AccountEntity accountEntity = AccountEntity.getInstance();
+        AccountEntity accountEntity = App.acc;
         try {
             switch (menuItemText) {
                 case "Online":
@@ -133,8 +133,8 @@ public class AccountController {
                         call.getInfo().getRemoteUri(), new Date(System.currentTimeMillis()).toString(),
                         Integer.toString(call.getInfo().getConnectDuration().getSec()),
                         call.getInfo().getLastReason());
-            AccountEntity.getInstance().addCallHistoryEntry(callHistoryEntry);
-            AccountEntity.writeAccountToFile(AccountEntity.getInstance());
+            App.acc.addCallHistoryEntry(callHistoryEntry);
+            AccountEntity.writeAccountToFile(App.acc);
             return callHistoryEntry;
         } catch (Exception e) {
             // TODO Auto-generated catch block

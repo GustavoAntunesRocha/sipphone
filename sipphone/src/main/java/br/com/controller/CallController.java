@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.pjsip.pjsua2.CallOpParam;
 
-import br.com.model.AccountEntity;
+import br.com.App;
 import br.com.model.CallEntity;
 import br.com.view.CallWindow;
 import javafx.application.Platform;
@@ -105,7 +105,7 @@ public class CallController {
     }
 
     public void handleCall(String number){
-        this.callEntity = CallEntity.makeCall(AccountEntity.getInstance(), number);
+        this.callEntity = CallEntity.makeCall(App.acc, number);
     }
 
     public void showCallingAlert(){

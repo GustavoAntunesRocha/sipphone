@@ -11,7 +11,6 @@ import org.pjsip.pjsua2.pjsip_transport_type_e;
 
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
-import br.com.model.CallHistoryEntry;
 import br.com.view.MainWindow;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,17 +18,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-//Subclass to extend the Account and get notifications etc.
-
 public class App extends Application {
 
     private static Scene scene;
     private static Endpoint ep;
 
+    public static AccountEntity acc;
+
     public final static String ACC_FILE_PATH = "account.bin";
 
-    public static void connectSipServer(AccountEntity acc){
+    public static void connectSipServer(){
         try {
             
             // Create SIP transport. Error handling sample is shown
@@ -86,6 +84,8 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         initLibrary();
 
+        acc = new AccountEntity();
+
         MainController mainController = MainController.getInstance();
         MainWindow mainWindow = MainWindow.getInstance();
         stage.setMinHeight(361);
@@ -101,27 +101,18 @@ public class App extends Application {
         });
         mainController.setMainWindow(mainWindow);
 
-        AccountEntity acc = AccountEntity.getInstance();
         acc = AccountEntity.readAccountFromFile();
-
-        if(acc != null){
-            for (CallHistoryEntry entry : acc.getCallHistory()) {
-                System.out.println("\n\nCall history: " + entry.getName());
-            }
-        }
                 
         if(acc != null)
-            connectSipServer(acc);
+            connectSipServer();
          
     }
 
     public static void deleteLibrary(){
         try {
-            AccountEntity acc = AccountEntity.getInstance();
             acc.delete();
             ep.libDestroy();
             ep.delete();
-            acc.removeAccount();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

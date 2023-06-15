@@ -24,7 +24,7 @@ public class MainController {
     }
 
     public void updateAccountText() {
-        AccountEntity accountEntity = AccountEntity.getInstance();
+        AccountEntity accountEntity = App.acc;
         if (accountEntity.getName() != null) {
             try {
                 MainWindow.getInstance().setUsername(accountEntity.getAccountConfigModel().getUsername());
@@ -43,7 +43,7 @@ public class MainController {
     }
 
     public void loadCallHistory() {
-        AccountEntity accountEntity = AccountEntity.getInstance();
+        AccountEntity accountEntity = App.acc;
         if (accountEntity.getName() != null) {
             try {
                 for (CallHistoryEntry callHistoryEntry : accountEntity.getCallHistory()) {
