@@ -51,7 +51,7 @@
                                  <Insets top="5.0" />
                               </VBox.margin>
                            </Label>
-                           <TextField fx:id="numberField">
+                           <TextField onKeyPressed="#handleEnterKey" fx:id="numberField">
                               <VBox.margin>
                                  <Insets bottom="5.0" top="5.0" />
                               </VBox.margin>

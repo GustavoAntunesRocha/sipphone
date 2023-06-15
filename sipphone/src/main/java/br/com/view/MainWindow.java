@@ -16,6 +16,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 public class MainWindow {
@@ -76,7 +78,7 @@ public class MainWindow {
         status = new Text();
         numberField = new TextField();
         callButton = new Button();
-        //callHistoryTable = new TableView<CallHistoryEntry>();
+        // callHistoryTable = new TableView<CallHistoryEntry>();
         instance = this;
     }
 
@@ -138,6 +140,13 @@ public class MainWindow {
         String menuItemText = menuItem.getText();
         this.status.setText(menuItemText);
         AccountController.getInstance().handlePresence(menuItemText);
+    }
+
+    @FXML
+    private void handleEnterKey(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            handleCall();
+        }
     }
 
     public Text getUsername() {
