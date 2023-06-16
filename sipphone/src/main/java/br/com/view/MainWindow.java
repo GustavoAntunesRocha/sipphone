@@ -6,6 +6,7 @@ import br.com.controller.CallController;
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
 import br.com.model.CallHistoryEntry;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -63,6 +64,9 @@ public class MainWindow {
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
         duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
         callHistoryTable.setItems(FXCollections.observableList(App.acc.getCallHistory()));
+        Platform.runLater(() -> {
+            numberField.requestFocus();
+        });
     }
 
     public static MainWindow getInstance() {
