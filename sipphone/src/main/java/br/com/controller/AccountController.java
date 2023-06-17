@@ -2,6 +2,8 @@ package br.com.controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.pjsip.pjsua2.PresenceStatus;
 import org.pjsip.pjsua2.pjsip_transport_type_e;
@@ -129,9 +131,25 @@ public class AccountController {
 
     public CallHistoryEntry addCallHistoryEntry(CallEntity call){
         try {
-            CallHistoryEntry callHistoryEntry = new CallHistoryEntry(call.getInfo().getRemoteUri(),
-                        call.getInfo().getRemoteUri(), new Date(System.currentTimeMillis()).toString(),
-                        Integer.toString(call.getInfo().getConnectDuration().getSec()),
+            String name = "";
+            String number = "";
+            if(call.getInfo().getRemoteUri().contains("\"")){
+                String[] split = call.getInfo().getRemoteUri().split("\"");
+                name = split[1];
+                number = split[2].split(":")[1].split("@")[0];
+            } else{
+                name = call.getInfo().getRemoteUri().split(":")[1].split("@")[0];
+                number = name;
+            }
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+            String formattedDateTime = now.format(formatter);
+            int minutes = call.getInfo().getConnectDuration().getSec() / 60;
+            int seconds = call.getInfo().getConnectDuration().getSec() % 60;
+            String callDuration = String.format("%d:%02d", minutes, seconds);
+            CallHistoryEntry callHistoryEntry = new CallHistoryEntry(name,
+                        number, formattedDateTime,
+                        callDuration,
                         call.getInfo().getLastReason());
             App.acc.addCallHistoryEntry(callHistoryEntry);
             AccountEntity.writeAccountToFile(App.acc);
