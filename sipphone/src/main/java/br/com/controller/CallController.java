@@ -105,7 +105,27 @@ public class CallController {
     }
 
     public void handleCall(String number){
-        this.callEntity = CallEntity.makeCall(App.acc, number);
+        if(App.acc.getName() == null){
+            Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Alert alert;
+                try {
+                    alert = new Alert(Alert.AlertType.ERROR, "There's no account configured!", ButtonType.OK);
+                    alert.initModality(Modality.APPLICATION_MODAL); // Set the modality to APPLICATION_MODAL
+                    alert.showAndWait(); // Show the alert and wait for it
+                    
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+            }
+        });
+            return;
+        } else{
+            this.callEntity = CallEntity.makeCall(App.acc, number);
+        }
     }
 
     public void showCallingAlert(){
