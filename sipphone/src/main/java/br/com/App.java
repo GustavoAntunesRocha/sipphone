@@ -103,7 +103,7 @@ public class App extends Application {
 
         acc = AccountEntity.readAccountFromFile();
                 
-        if(acc != null)
+        if(acc.getName() != null)
             connectSipServer();
          
     }
