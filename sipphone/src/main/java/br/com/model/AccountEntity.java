@@ -32,6 +32,8 @@ public class AccountEntity extends Account implements Serializable {
 
 	private List<CallHistoryEntry> callHistory;
 
+	private List<Contact> contacts;
+
 	public enum Status {
 		ONLINE,
 		OFFLINE,
@@ -48,6 +50,7 @@ public class AccountEntity extends Account implements Serializable {
 		this.accountConfig = new AccountConfigModel();
 		this.transportConfig = new TransportConfigModel();
 		this.callHistory = new ArrayList<>();
+		this.contacts = new ArrayList<>();
 	}
 
 	@Override
@@ -96,6 +99,7 @@ public class AccountEntity extends Account implements Serializable {
 			objectOutputStream.writeObject(accountEntity.getAccountConfigModel());
 			objectOutputStream.writeObject(accountEntity.getTransportConfigModel());
 			objectOutputStream.writeObject(accountEntity.getCallHistory());
+			objectOutputStream.writeObject(accountEntity.getContacts());
 			objectOutputStream.close();
 			fileOutputStream.close();
 		} catch (Exception e) {
@@ -113,7 +117,9 @@ public class AccountEntity extends Account implements Serializable {
 			accountEntity.setAccountConfigModel((AccountConfigModel) objectInputStream.readObject());
 			accountEntity.setTransportConfigModel((TransportConfigModel) objectInputStream.readObject());
 			List<CallHistoryEntry> callHistory = (List<CallHistoryEntry>) objectInputStream.readObject();
+			List<Contact> contacts = (List<Contact>) objectInputStream.readObject();
 			accountEntity.setCallHistory(callHistory);
+			accountEntity.setContacts(contacts);
 			objectInputStream.close();
 			fileInputStream.close();
 		} catch (Exception e) {
@@ -121,12 +127,6 @@ public class AccountEntity extends Account implements Serializable {
 		}
 		return accountEntity;
 	}
-
-	/*
-	 * public void removeAccount() {
-	 * instance = null;
-	 * }
-	 */
 
 	public int getId() {
 		return id;
@@ -187,25 +187,12 @@ public class AccountEntity extends Account implements Serializable {
 		this.callHistory.add(callHistoryEntry);
 	}
 
-	/*
-	 * public void loadCallHistory() {
-	 * List<CallHistoryEntry> callHistory = new ArrayList<>();
-	 * try {
-	 * FileInputStream fileIn = new FileInputStream("call_history.bin");
-	 * ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-	 * while (fileIn.available() > 0) {
-	 * CallHistoryEntry callHistoryEntry = (CallHistoryEntry) objectIn.readObject();
-	 * callHistory.add(callHistoryEntry);
-	 * }
-	 * objectIn.close();
-	 * fileIn.close();
-	 * } catch (EOFException e) {
-	 * // End of file reached, do nothing
-	 * } catch (IOException | ClassNotFoundException e) {
-	 * e.printStackTrace();
-	 * }
-	 * this.callHistory = callHistory;
-	 * }
-	 */
+	public List<Contact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<Contact> contacts) {
+		this.contacts = contacts;
+	}
 
 }

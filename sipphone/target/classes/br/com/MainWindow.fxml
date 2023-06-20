@@ -51,7 +51,7 @@
                                  <Insets top="5.0" />
                               </VBox.margin>
                            </Label>
-                           <TextField onKeyPressed="#handleEnterKey" fx:id="numberField">
+                           <TextField fx:id="numberField" onKeyPressed="#handleEnterKey">
                               <VBox.margin>
                                  <Insets bottom="5.0" top="5.0" />
                               </VBox.margin>
@@ -118,6 +118,24 @@
                            </AnchorPane>
                        </content>
                      </ScrollPane>
+                  </children>
+               </AnchorPane>
+           </content>
+         </Tab>
+         <Tab text="Contacts">
+           <content>
+             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                     <TableView prefHeight="204.0" prefWidth="263.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                       <columns>
+                           <TableColumn minWidth="-Infinity" prefWidth="75.0" text="Presence" />
+                         <TableColumn prefWidth="75.0" text="Name" />
+                         <TableColumn prefWidth="75.0" text="Number" />
+                       </columns>
+                        <columnResizePolicy>
+                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                     </TableView>
                   </children>
                </AnchorPane>
            </content>

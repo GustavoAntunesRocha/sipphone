@@ -6,6 +6,7 @@ import br.com.controller.CallController;
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
 import br.com.model.CallHistoryEntry;
+import br.com.model.Contact;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,6 +57,15 @@ public class MainWindow {
     @FXML
     private TableColumn<CallHistoryEntry, String> info;
 
+    @FXML
+    private TableView<Contact> contactTable;
+
+    @FXML
+    private TableColumn<Contact, String> contactName;
+
+    @FXML
+    private TableColumn<Contact, String> contactNumber;
+
     private static MainWindow instance;
 
     public void initialize() {
@@ -64,6 +74,7 @@ public class MainWindow {
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
         duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
         callHistoryTable.setItems(FXCollections.observableList(App.acc.getCallHistory()));
+        contactTable.setItems(FXCollections.observableList(App.acc.getContacts()));
         Platform.runLater(() -> {
             numberField.requestFocus();
         });
@@ -106,6 +117,16 @@ public class MainWindow {
     public void updateCallHistoryTable() {
         ObservableList<CallHistoryEntry> callHistoryList = FXCollections.observableArrayList(App.acc.getCallHistory());
         callHistoryTable.setItems(callHistoryList);
+    }
+
+    public void addContact(String name, String phoneNumber, String email) {
+        Contact contact = new Contact(name, phoneNumber, email);
+        contactTable.getItems().add(contact);
+    }
+
+    public void updateContactTable() {
+        ObservableList<Contact> contactList = FXCollections.observableArrayList(App.acc.getContacts());
+        contactTable.setItems(contactList);
     }
 
     @FXML
