@@ -74,8 +74,9 @@ public class MainWindow {
         number.setCellValueFactory(new PropertyValueFactory<>("number"));
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
         duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        contactName.setCellValueFactory(new PropertyValueFactory<>("contactName"));
+        contactNumber.setCellValueFactory(new PropertyValueFactory<>("contactNumber"));
         callHistoryTable.setItems(FXCollections.observableList(App.acc.getCallHistory()));
-        contactTable.setItems(FXCollections.observableList(App.acc.getContacts()));
         Platform.runLater(() -> {
             numberField.requestFocus();
         });

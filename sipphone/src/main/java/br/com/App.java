@@ -100,8 +100,9 @@ public class App extends Application {
             deleteLibrary();
         });
         mainController.setMainWindow(mainWindow);
-
+        
         acc = AccountEntity.readAccountFromFile();
+        mainController.updateContactTable();
                 
         if(acc.getName() != null)
             connectSipServer();

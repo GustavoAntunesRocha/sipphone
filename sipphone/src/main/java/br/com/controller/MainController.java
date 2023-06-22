@@ -62,31 +62,22 @@ public class MainController {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                /* MainWindow.getInstance().addCallHistoryEntry(callHistoryEntry.getName(),
-                        callHistoryEntry.getNumber(),
-                        callHistoryEntry.getDate(),
-                        callHistoryEntry.getDuration(),
-                        callHistoryEntry.getInfo()); */
                 MainWindow.getInstance().updateCallHistoryTable();
+            }
+        });
+    }
+
+    public void updateContactTable() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                MainWindow.getInstance().updateContactTable();
             }
         });
     }
 
     public void setMainWindow(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
-        // mainWindow.setUsername(accountEntity.getAccountConfigModel().getUsername());
-        // mainWindow.setDomain(accountEntity.getAccountConfigModel().getDomain());
-        // mainWindow.setStatus("Offline");
-        /*
-         * mainWindow.setDateColumn(new TableColumn("Date"));
-         * mainWindow.setNumberColumn(new TableColumn("Number"));
-         * mainWindow.setDurationColumn(new TableColumn("Duration"));
-         */
-        /*
-         * mainWindow.getCallHistoryTable().getColumns().addAll(mainWindow.getDateColumn
-         * (),
-         * mainWindow.getNumberColumn(), mainWindow.getDurationColumn());
-         */
     }
 
     public static void handleExit() {
