@@ -108,6 +108,7 @@
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/Account.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/br/com/controller/CallController.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/AudioMediaRecorder.java
+/home/gustavo/programacao/sipphone/sipphone/src/main/java/br/com/view/ContactWindow.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/VideoSwitchParam.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/OnCallTransferRequestParam.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/br/com/App.java
@@ -138,6 +139,7 @@
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/CodecParamSetting.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/CodecParamInfo.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/LossType.java
+/home/gustavo/programacao/sipphone/sipphone/src/main/java/br/com/controller/ContactController.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/OnCreateMediaTransportSrtpParam.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/CodecInfoVector2.java
 /home/gustavo/programacao/sipphone/sipphone/src/main/java/org/pjsip/pjsua2/SWIGTYPE_p_void.java

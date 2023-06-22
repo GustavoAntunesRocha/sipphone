@@ -3,6 +3,7 @@ package br.com.view;
 import br.com.App;
 import br.com.controller.AccountController;
 import br.com.controller.CallController;
+import br.com.controller.ContactController;
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
 import br.com.model.CallHistoryEntry;
@@ -93,6 +94,7 @@ public class MainWindow {
         status = new Text();
         numberField = new TextField();
         callButton = new Button();
+        contactTable = new TableView<Contact>();
         // callHistoryTable = new TableView<CallHistoryEntry>();
         instance = this;
     }
@@ -119,14 +121,18 @@ public class MainWindow {
         callHistoryTable.setItems(callHistoryList);
     }
 
-    public void addContact(String name, String phoneNumber, String email) {
-        Contact contact = new Contact(name, phoneNumber, email);
+    public void addContact(Contact contact) {
         contactTable.getItems().add(contact);
     }
 
     public void updateContactTable() {
         ObservableList<Contact> contactList = FXCollections.observableArrayList(App.acc.getContacts());
         contactTable.setItems(contactList);
+    }
+
+    @FXML
+    public void handleContactWindow(){
+        ContactController.getInstance().handleContactWindow();
     }
 
     @FXML
