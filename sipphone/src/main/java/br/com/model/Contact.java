@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import org.pjsip.pjsua2.Buddy;
 import org.pjsip.pjsua2.BuddyConfig;
+import org.pjsip.pjsua2.BuddyInfo;
 
 import br.com.App;
+import br.com.controller.MainController;
 
 public class Contact extends Buddy implements Serializable{
     
@@ -14,6 +16,7 @@ public class Contact extends Buddy implements Serializable{
     private String contactNumber;
     private String email;
     private boolean presenceSubscription;
+    private String contactPresence;
 
     public Contact(int id, String name, String phoneNumber, String email, boolean presenceSubscription) {
         this.id = id;
@@ -23,6 +26,16 @@ public class Contact extends Buddy implements Serializable{
         this.presenceSubscription = presenceSubscription;
         if(presenceSubscription){
             presenceSubscribe(phoneNumber);
+        }
+    }
+
+    @Override
+    public void onBuddyState() {
+        try {
+            BuddyInfo bi = getInfo();
+            MainController.getInstance().updateContactPresence(this, bi.getPresStatus().getStatusText());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -62,11 +75,19 @@ public class Contact extends Buddy implements Serializable{
         return presenceSubscription;
     }
 
+    public String getContactPresence() {
+        return contactPresence;
+    }
+
+    public void setContactPresence(String contactPresence) {
+        this.contactPresence = contactPresence;
+    }
+
     public void setPresenceSubscription(boolean presenceSubscription) {
         this.presenceSubscription = presenceSubscription;
     }
 
-    public void presenceSubscribe(Contact contact){
+    public static void presenceSubscribe(Contact contact){
         try {
             BuddyConfig cfg = new BuddyConfig();
             cfg.setUri("sip:" + contact.getContactNumber() + "@" + App.acc.getAccountConfigModel().getDomain());

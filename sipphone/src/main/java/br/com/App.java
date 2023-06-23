@@ -53,6 +53,9 @@ public class App extends Application {
 
             acc.create(acfg);
 
+            MainController.getInstance().loadContactsPresenceSubscription();
+            MainController.getInstance().updateContactTable();
+
         } catch (Exception e) {
             System.out.println(e);
             return;
@@ -102,8 +105,7 @@ public class App extends Application {
         mainController.setMainWindow(mainWindow);
         
         acc = AccountEntity.readAccountFromFile();
-        mainController.updateContactTable();
-                
+                        
         if(acc.getName() != null)
             connectSipServer();
          

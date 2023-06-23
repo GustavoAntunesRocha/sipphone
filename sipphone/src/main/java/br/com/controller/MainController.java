@@ -5,6 +5,7 @@ import java.util.Optional;
 import br.com.App;
 import br.com.model.AccountEntity;
 import br.com.model.CallHistoryEntry;
+import br.com.model.Contact;
 import br.com.view.MainWindow;
 import javafx.application.Platform;
 
@@ -56,8 +57,6 @@ public class MainController {
         }
     }
 
-    
-
     public void addCallHistoryEntry(CallHistoryEntry callHistoryEntry) {
         Platform.runLater(new Runnable() {
             @Override
@@ -72,6 +71,29 @@ public class MainController {
             @Override
             public void run() {
                 MainWindow.getInstance().updateContactTable();
+            }
+        });
+    }
+
+    public void updateContactPresence(Contact contact, String presenceText) {
+        App.acc.getContacts().stream().filter(c -> c.equals(contact)).findFirst().ifPresent(c -> {
+            c.setContactPresence(presenceText);
+        });
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                MainWindow.getInstance().setContactPresenceText(contact, presenceText);
+            }
+        });
+    }
+
+    public void loadContactsPresenceSubscription(){
+        App.acc.getContacts().stream().forEach(c -> {
+            try {
+                Contact.presenceSubscribe(c);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         });
     }

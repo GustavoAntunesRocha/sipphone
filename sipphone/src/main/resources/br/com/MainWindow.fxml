@@ -129,7 +129,7 @@
                   <children>
                      <TableView fx:id="contactTable" prefHeight="204.0" prefWidth="263.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                        <columns>
-                           <TableColumn minWidth="-Infinity" prefWidth="75.0" text="Presence" />
+                           <TableColumn fx:id="contactPresence" minWidth="-Infinity" prefWidth="75.0" text="Presence" />
                          <TableColumn fx:id="contactName" prefWidth="75.0" text="Name" />
                          <TableColumn fx:id="contactNumber" prefWidth="75.0" text="Number" />
                        </columns>

@@ -67,6 +67,9 @@ public class MainWindow {
     @FXML
     private TableColumn<Contact, String> contactNumber;
 
+    @FXML
+    private TableColumn<Contact, String> contactPresence;
+
     private static MainWindow instance;
 
     public void initialize() {
@@ -76,6 +79,7 @@ public class MainWindow {
         duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
         contactName.setCellValueFactory(new PropertyValueFactory<>("contactName"));
         contactNumber.setCellValueFactory(new PropertyValueFactory<>("contactNumber"));
+        contactPresence.setCellValueFactory(new PropertyValueFactory<>("contactPresence"));
         callHistoryTable.setItems(FXCollections.observableList(App.acc.getCallHistory()));
         Platform.runLater(() -> {
             numberField.requestFocus();
@@ -131,8 +135,19 @@ public class MainWindow {
         contactTable.setItems(contactList);
     }
 
+    public void setContactPresenceText(Contact contact, String presenceText) {
+        for (Contact c : contactTable.getItems()) {
+            if (c.getContactNumber().equals(contact.getContactNumber())) {
+                System.out.println("\n\n\n\nNew contact presence: " + c.getContactName() + " " + presenceText + "\n");
+                //c.setContactPresence(presenceText);
+                contactTable.getItems().set(contactTable.getItems().indexOf(c), c);
+            }
+        }
+        System.out.println("\n\nFinished\n\n\n");
+    }
+
     @FXML
-    public void handleContactWindow(){
+    public void handleContactWindow() {
         ContactController.getInstance().handleContactWindow();
     }
 
