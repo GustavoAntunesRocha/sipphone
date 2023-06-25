@@ -1,7 +1,5 @@
 package br.com.controller;
 
-import java.util.Optional;
-
 import br.com.App;
 import br.com.model.AccountEntity;
 import br.com.model.CallHistoryEntry;

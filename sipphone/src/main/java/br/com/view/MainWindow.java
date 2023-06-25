@@ -5,7 +5,6 @@ import br.com.controller.AccountController;
 import br.com.controller.CallController;
 import br.com.controller.ContactController;
 import br.com.controller.MainController;
-import br.com.model.AccountEntity;
 import br.com.model.CallHistoryEntry;
 import br.com.model.Contact;
 import javafx.application.Platform;
@@ -139,7 +138,6 @@ public class MainWindow {
         for (Contact c : contactTable.getItems()) {
             if (c.getContactNumber().equals(contact.getContactNumber())) {
                 System.out.println("\n\n\n\nNew contact presence: " + c.getContactName() + " " + presenceText + "\n");
-                //c.setContactPresence(presenceText);
                 contactTable.getItems().set(contactTable.getItems().indexOf(c), c);
             }
         }
