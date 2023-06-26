@@ -99,7 +99,6 @@ public class MainWindow {
         numberField = new TextField();
         callButton = new Button();
         contactTable = new TableView<Contact>();
-        // callHistoryTable = new TableView<CallHistoryEntry>();
         instance = this;
     }
 
@@ -137,11 +136,9 @@ public class MainWindow {
     public void setContactPresenceText(Contact contact, String presenceText) {
         for (Contact c : contactTable.getItems()) {
             if (c.getContactNumber().equals(contact.getContactNumber())) {
-                System.out.println("\n\n\n\nNew contact presence: " + c.getContactName() + " " + presenceText + "\n");
                 contactTable.getItems().set(contactTable.getItems().indexOf(c), c);
             }
         }
-        System.out.println("\n\nFinished\n\n\n");
     }
 
     @FXML

@@ -27,26 +27,24 @@ public class App extends Application {
 
     public final static String ACC_FILE_PATH = "account.bin";
 
-    public static void connectSipServer(){
+    public static void connectSipServer() {
         try {
-            
+
             // Create SIP transport. Error handling sample is shown
-                TransportConfig sipTpConfig = new TransportConfig();
-                sipTpConfig.setPort(5060);
-                ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
-                // Start the library
-                ep.libStart();
+            TransportConfig sipTpConfig = new TransportConfig();
+            sipTpConfig.setPort(5060);
+            ep.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
+            // Start the library
+            ep.libStart();
 
             AccountConfig acfg = new AccountConfig();
             acfg.setIdUri(
                     "sip:" + acc.getAccountConfigModel().getUsername() + "@" + acc.getAccountConfigModel().getDomain());
             acfg.getRegConfig().setRegistrarUri("sip:" + acc.getAccountConfigModel().getDomain());
 
-
             AuthCredInfo cred = new AuthCredInfo(acc.getAccountConfigModel().getScheme(),
                     acc.getAccountConfigModel().getRealm(), acc.getAccountConfigModel().getUsername(),
                     0, acc.getAccountConfigModel().getPassword());
-
 
             acfg.getSipConfig().getAuthCreds().add(cred);
             // Create the account
@@ -62,25 +60,22 @@ public class App extends Application {
         }
     }
 
-    private static void initLibrary(){
+    private static void initLibrary() {
         System.loadLibrary("pjsua2");
-            System.out.println("Library loaded");
-            
-            //if(ep == null){
-                // Create endpoint
-                ep = new Endpoint();
-                try {
-                    ep.libCreate();
-                    // Initialize endpoint
-                    EpConfig epConfig = new EpConfig();
-                    ep.libInit(epConfig);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-    
-                
-            //}
+        System.out.println("Library loaded");
+
+        // Create endpoint
+        ep = new Endpoint();
+        try {
+            ep.libCreate();
+            // Initialize endpoint
+            EpConfig epConfig = new EpConfig();
+            ep.libInit(epConfig);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -98,20 +93,20 @@ public class App extends Application {
         stage.show();
 
         mainController.addCallHistoryEntry(null);
-        
+
         stage.setOnCloseRequest(event -> {
             deleteLibrary();
         });
         mainController.setMainWindow(mainWindow);
-        
+
         acc = AccountEntity.readAccountFromFile();
-                        
-        if(acc.getName() != null)
+
+        if (acc.getName() != null)
             connectSipServer();
-         
+
     }
 
-    public static void deleteLibrary(){
+    public static void deleteLibrary() {
         try {
             acc.delete();
             ep.libDestroy();
@@ -120,7 +115,7 @@ public class App extends Application {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -135,5 +130,5 @@ public class App extends Application {
     public static void main(String argv[]) {
         launch(argv);
     }
-    
+
 }
