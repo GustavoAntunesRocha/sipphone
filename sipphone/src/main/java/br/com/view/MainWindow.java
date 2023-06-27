@@ -2,6 +2,7 @@ package br.com.view;
 
 import br.com.App;
 import br.com.controller.AccountController;
+import br.com.controller.AppSettingsController;
 import br.com.controller.CallController;
 import br.com.controller.ContactController;
 import br.com.controller.MainController;
@@ -189,6 +190,12 @@ public class MainWindow {
         if (event.getCode() == KeyCode.ENTER) {
             handleCall();
         }
+    }
+
+    @FXML
+    private void handleAppSettings() {
+        // Handle app settings menu item click
+        AppSettingsController.getInstance().showAppSettingsWindow();
     }
 
     public Text getUsername() {

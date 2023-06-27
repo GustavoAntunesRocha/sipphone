@@ -36,6 +36,7 @@
       <Menu mnemonicParsing="false" text="Settings">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#handleAccountSettings" text="Account" />
+            <MenuItem mnemonicParsing="false" onAction="#handleAppSettings" text="Application" />
         </items>
       </Menu>
     </MenuBar>
