@@ -6,18 +6,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="234.0" prefWidth="322.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.AppSettingsWindow">
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="234.0" prefWidth="361.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.view.AppSettingsWindow">
   <content>
-    <AnchorPane prefHeight="219.0" prefWidth="303.0">
+    <AnchorPane prefHeight="219.0" prefWidth="358.0">
          <children>
             <Text layoutX="11.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Listening device" />
             <Text layoutX="39.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ring device" />
             <Text layoutX="33.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input device" wrappingWidth="83.25537109375" />
             <Button layoutX="227.0" layoutY="181.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
             <Button layoutX="154.0" layoutY="181.0" mnemonicParsing="false" onAction="#handleSave" text="Save" />
-            <ChoiceBox fx:id="listeningDeviceChoiceBox" layoutX="129.0" layoutY="13.0" prefWidth="150.0" AnchorPane.bottomAnchor="182.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="13.0" />
-            <ChoiceBox fx:id="ringDeviceChoiceBox" layoutX="129.0" layoutY="53.0" prefWidth="150.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="53.0" />
-            <ChoiceBox fx:id="inputDeviceChoiceBox" layoutX="129.0" layoutY="94.0" prefWidth="150.0" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="94.0" />
+            <ChoiceBox fx:id="listeningDeviceChoiceBox" layoutX="129.0" layoutY="13.0" prefWidth="150.0" AnchorPane.bottomAnchor="182.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="13.0" />
+            <ChoiceBox fx:id="ringDeviceChoiceBox" layoutX="129.0" layoutY="53.0" prefWidth="150.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="53.0" />
+            <ChoiceBox fx:id="inputDeviceChoiceBox" layoutX="129.0" layoutY="94.0" prefWidth="150.0" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="94.0" />
+            <Button onAction="#handlePlaySoundButtonAction" layoutX="290.0" layoutY="13.0" mnemonicParsing="false" text="Test" AnchorPane.bottomAnchor="182.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="13.0" />
          </children></AnchorPane>
   </content>
 </ScrollPane>
