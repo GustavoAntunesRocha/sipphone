@@ -15,9 +15,9 @@
             <Text layoutX="33.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input device" wrappingWidth="83.25537109375" />
             <Button layoutX="227.0" layoutY="181.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
             <Button layoutX="154.0" layoutY="181.0" mnemonicParsing="false" onAction="#handleSave" text="Save" />
-            <ChoiceBox layoutX="129.0" layoutY="13.0" prefWidth="150.0" AnchorPane.bottomAnchor="182.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="13.0" />
-            <ChoiceBox layoutX="129.0" layoutY="53.0" prefWidth="150.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="53.0" />
-            <ChoiceBox layoutX="129.0" layoutY="94.0" prefWidth="150.0" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="94.0" />
+            <ChoiceBox fx:id="listeningDeviceChoiceBox" layoutX="129.0" layoutY="13.0" prefWidth="150.0" AnchorPane.bottomAnchor="182.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="13.0" />
+            <ChoiceBox fx:id="ringDeviceChoiceBox" layoutX="129.0" layoutY="53.0" prefWidth="150.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="53.0" />
+            <ChoiceBox fx:id="inputDeviceChoiceBox" layoutX="129.0" layoutY="94.0" prefWidth="150.0" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="94.0" />
          </children></AnchorPane>
   </content>
 </ScrollPane>

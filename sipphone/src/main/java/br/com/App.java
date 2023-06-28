@@ -1,19 +1,6 @@
 package br.com;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.CompoundControl;
-import javax.sound.sampled.Control;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.Mixer;
-import javax.sound.sampled.Port;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
 
 import org.pjsip.pjsua2.AccountConfig;
 import org.pjsip.pjsua2.AudDevManager;
@@ -69,142 +56,10 @@ public class App extends Application {
             MainController.getInstance().loadContactsPresenceSubscription();
             MainController.getInstance().updateContactTable();
 
-            probePort();
-
         } catch (Exception e) {
             System.out.println(e);
             return;
         }
-    }
-
-    public static void printPlaybackDevices() {
-        Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
-        System.out.println("\n\nPlayback devices:");
-        for (Mixer.Info mixerInfo : mixerInfos) {
-            Mixer mixer = AudioSystem.getMixer(mixerInfo);
-            Line.Info[] lineInfos = mixer.getTargetLineInfo();
-            if (lineInfos.length >= 1 && lineInfos[0].getLineClass().equals(TargetDataLine.class)) {
-                System.out.println(mixerInfo.getName());
-            }
-        }
-        System.out.println("\n\n");
-    }
-
-    public static void printMixer() {
-        Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
-        System.out.println("\n\nPlayback devices:");
-        for (Mixer.Info info : mixerInfos) {
-            System.out
-                    .println(String.format("\n\nName: %s, Description: %s\n\n", info.getName(), info.getDescription()));
-        }
-
-    }
-
-    public static void showMixers() {
-        ArrayList<Mixer.Info> mixInfos = new ArrayList<Mixer.Info>(
-                Arrays.asList(
-                        AudioSystem.getMixerInfo()));
-        Line.Info sourceDLInfo = new Line.Info(
-                SourceDataLine.class);
-        Line.Info targetDLInfo = new Line.Info(
-                TargetDataLine.class);
-        Line.Info clipInfo = new Line.Info(Clip.class);
-        Line.Info portInfo = new Line.Info(Port.class);
-        String support;
-        for (Mixer.Info mixInfo : mixInfos) {
-            Mixer mixer = AudioSystem.getMixer(
-                    mixInfo);
-            support = ", supports ";
-            if (mixer.isLineSupported(
-                    sourceDLInfo))
-                support += "SourceDataLine ";
-            if (mixer.isLineSupported(
-                    clipInfo))
-                support += "Clip ";
-            if (mixer.isLineSupported(
-                    targetDLInfo))
-                support += "TargetDataLine ";
-            if (mixer.isLineSupported(
-                    portInfo))
-                support += "Port ";
-            System.out.println("Mixer: "
-                    + mixInfo.getName() +
-                    support + ", " +
-                    mixInfo.getDescription());
-        }
-    }
-
-    public static void probePort()
-            throws Exception {
-        ArrayList<Mixer.Info> mixerInfos = new ArrayList<Mixer.Info>(
-                Arrays.asList(
-                        AudioSystem.getMixerInfo()));
-        Line.Info portInfo = new Line.Info(Port.class);
-        for (Mixer.Info mixerInfo : mixerInfos) {
-            Mixer mixer = AudioSystem.getMixer(
-                    mixerInfo);
-            if (mixer.isLineSupported(
-                    portInfo)) {
-                // found a Port Mixer
-                disp("Found mixer: " +
-                        mixerInfo.getName());
-                disp("\t" +
-                        mixerInfo.getDescription());
-                disp("Source Line Supported:");
-                ArrayList<Line.Info> srcInfos = new ArrayList<Line.Info>(
-                        Arrays.asList(
-                                mixer.getSourceLineInfo()));
-                for (Line.Info srcInfo : srcInfos) {
-                    Port.Info pi = (Port.Info) srcInfo;
-                    disp("\t" + pi.getName() +
-                            ", " + (pi.isSource() ? "source" : "target"));
-                    showControls(mixer.getLine(
-                            srcInfo));
-                } // of for Line.Info
-                disp("Target Line Supported:");
-                ArrayList<Line.Info> targetInfos = new ArrayList<Line.Info>(
-                        Arrays.asList(
-                                mixer.getTargetLineInfo()));
-                for (Line.Info targetInfo : targetInfos) {
-                    Port.Info pi = (Port.Info) targetInfo;
-                    disp("\t" + pi.getName()
-                            + ", " +
-                            (pi.isSource() ? "source" : "taget"));
-                    showControls(mixer.getLine(
-                            targetInfo));
-                }
-            } // of if
-              // (mixer.isLineSupported)
-        } // of for (Mixer.Info)
-    }
-
-    private static void showControls(
-            Line inLine) throws Exception {
-        // must open the line to get
-        // at controls
-        inLine.open();
-        disp("\t\tAvailable controls:");
-        ArrayList<Control> ctrls = new ArrayList<Control>(
-                Arrays.asList(
-                        inLine.getControls()));
-        for (Control ctrl : ctrls) {
-            disp("\t\t\t" +
-                    ctrl.toString());
-            if (ctrl instanceof CompoundControl) {
-                CompoundControl cc = ((CompoundControl) ctrl);
-                ArrayList<Control> ictrls = new ArrayList<Control>(
-                        Arrays.asList(
-                                cc.getMemberControls()));
-                for (Control ictrl : ictrls)
-                    disp("\t\t\t\t" +
-                            ictrl.toString());
-            } // of if (ctrl instanceof)
-        } // of for(Control ctrl)
-        inLine.close();
-    }
-
-    private static void disp(String msg) {
-        System.out.println(msg);
     }
 
     public static void printAudioDevices() {
