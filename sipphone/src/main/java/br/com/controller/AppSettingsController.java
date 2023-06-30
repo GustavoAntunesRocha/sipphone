@@ -24,6 +24,7 @@ import org.pjsip.pjsua2.AudDevManager;
 import org.pjsip.pjsua2.Endpoint;
 
 import br.com.App;
+import br.com.model.AppSettings;
 import br.com.view.AppSettingsWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -94,6 +95,26 @@ public class AppSettingsController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Mixer.Info getSelectedDevice(String deviceName) {
+        Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
+        for (Mixer.Info mixerInfo : mixerInfos) {
+            if (mixerInfo.getName().equals(deviceName)) {
+                return mixerInfo;
+            }
+        }
+        return null;
+    }
+
+    public void handleSaveSettings(String listeningDevice, String ringDevice, String inputDevice) {
+        AppSettings appSettings = new AppSettings();
+        appSettings.setListeningDevice(listeningDevice);
+        appSettings.setRingDevice(ringDevice);
+        appSettings.setInputDevice(inputDevice);
+        setPlaybackDevice(getSelectedDevice(listeningDevice));
+
+        //TODO: Set ring device, and input device
     }
 
     public List<Mixer.Info> listOutputDevices4() throws Exception {
