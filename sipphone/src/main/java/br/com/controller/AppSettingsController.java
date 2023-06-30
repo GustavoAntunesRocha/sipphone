@@ -20,6 +20,9 @@ import javax.sound.sampled.Port;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.pjsip.pjsua2.AudDevManager;
+import org.pjsip.pjsua2.Endpoint;
+
 import br.com.App;
 import br.com.view.AppSettingsWindow;
 import javafx.application.Platform;
@@ -59,9 +62,6 @@ public class AppSettingsController {
             this.stage.setScene(this.scene);
             this.stage.show();
             this.appSettingsWindow = loader.getController();
-            for (String deviceString : listOutputDevices2()) {
-                System.out.println(deviceString);
-            }
             Platform.runLater(() -> {
                 try {
                     appSettingsWindow.setListeningDevice(listOutputDevices4());
@@ -74,6 +74,24 @@ public class AppSettingsController {
             });
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setPlaybackDevice(Mixer.Info selectedDevice) {
+        try {
+            // Get the index of the selected device
+            AudDevManager audDevManager = Endpoint.instance().audDevManager();
+
+            String selectedDeviceName = selectedDevice.getName().split(" ")[1]
+                    .split("\\[")[1].split(":")[0] + ":CARD=" + selectedDevice.getName().split(" ")[0] +
+                    ",DEV=0";
+            String selectedDeviceVendor = selectedDevice.getVendor().split(" ")[0];
+
+            int selectedDeviceIndex = audDevManager.lookupDev(selectedDeviceVendor, selectedDeviceName);
+            // Set the playback device to the selected device
+            audDevManager.setPlaybackDev(selectedDeviceIndex);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -56,6 +56,8 @@ public class App extends Application {
             MainController.getInstance().loadContactsPresenceSubscription();
             MainController.getInstance().updateContactTable();
 
+            printAudioDevices();
+
         } catch (Exception e) {
             System.out.println(e);
             return;
