@@ -51,6 +51,7 @@ public class AppSettingsWindow {
         try {
             ObservableList<Mixer.Info> observableOutputDevices = FXCollections.observableArrayList(outputDevices);
             listeningDeviceChoiceBox.setItems(observableOutputDevices);
+            listeningDeviceChoiceBox.setValue(AppSettingsController.getInstance().getListeningDevice());
             listeningDeviceChoiceBox.setConverter(new StringConverter<Mixer.Info>() {
                 @Override
                 public String toString(Mixer.Info mixerInfo) {
@@ -77,6 +78,7 @@ public class AppSettingsWindow {
         try {
             ObservableList<Mixer.Info> observableOutputDevices = FXCollections.observableArrayList(devices);
             ringDeviceChoiceBox.setItems(observableOutputDevices);
+            ringDeviceChoiceBox.setValue(AppSettingsController.getInstance().getRingDevice());
             ringDeviceChoiceBox.setConverter(new StringConverter<Mixer.Info>() {
                 @Override
                 public String toString(Mixer.Info mixerInfo) {
@@ -101,6 +103,7 @@ public class AppSettingsWindow {
 
     public void setInputDevice(List<String> devices) {
         inputDeviceChoiceBox.getItems().addAll(devices);
+        //TODO: set default value
     }
 
     /* @FXML
@@ -123,7 +126,7 @@ public class AppSettingsWindow {
 
     @FXML
     private void testSoundListeningDevice(ActionEvent event) {
-        File soundFile = new File("/home/gustavo/oldphone-mono.wav");
+        File soundFile = new File(AppSettingsController.getInstance().getRingSoundFilePath());
         Mixer.Info mixerInfo = listeningDeviceChoiceBox.getValue();        
         try {
             AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
@@ -145,12 +148,13 @@ public class AppSettingsWindow {
 
     @FXML
     private void handleSave() {
-        // TODO
+        AppSettingsController.getInstance().handleSaveSettings(listeningDeviceChoiceBox.getValue().getName(),
+         ringDeviceChoiceBox.getValue().getName(), inputDeviceChoiceBox.getValue());
     }
 
     @FXML
     private void handleCancel() {
-        // TODO
+        AppSettingsController.getInstance().handleCancelSettings();
     }
 
 }

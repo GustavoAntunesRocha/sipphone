@@ -1,7 +1,11 @@
 package br.com.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +23,7 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.Port;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.tools.FileObject;
 
 import org.pjsip.pjsua2.AudDevManager;
 import org.pjsip.pjsua2.Endpoint;
@@ -38,10 +43,16 @@ public class AppSettingsController {
 
     private AppSettingsWindow appSettingsWindow;
 
+    private Mixer.Info listeningDevice;
+    private Mixer.Info ringDevice;
+    private Mixer.Info inputDevice;
+
     private Stage stage;
     private Scene scene;
 
     private FXMLLoader loader;
+
+    private AppSettings appSettings;
 
     private AppSettingsController() {
     }
@@ -108,13 +119,76 @@ public class AppSettingsController {
     }
 
     public void handleSaveSettings(String listeningDevice, String ringDevice, String inputDevice) {
-        AppSettings appSettings = new AppSettings();
         appSettings.setListeningDevice(listeningDevice);
         appSettings.setRingDevice(ringDevice);
         appSettings.setInputDevice(inputDevice);
         setPlaybackDevice(getSelectedDevice(listeningDevice));
 
-        //TODO: Set ring device, and input device
+        // TODO: Set ring device, and input device
+        this.listeningDevice = getSelectedDevice(listeningDevice);
+        this.ringDevice = getSelectedDevice(ringDevice);
+        this.inputDevice = getSelectedDevice(inputDevice);
+
+        saveAppSettingsToFile(appSettings, "appSettings.ser");
+
+        this.stage.close();
+
+    }
+
+    public void loadAppSettings() {
+        appSettings = readAppSettingsFromFile("appSettings.ser");
+        appSettings.setRingSound("/home/gustavo/oldphone-mono.wav");
+        if (appSettings != null) {
+            this.listeningDevice = getSelectedDevice(appSettings.getListeningDevice());
+            this.ringDevice = getSelectedDevice(appSettings.getRingDevice());
+            this.inputDevice = getSelectedDevice(appSettings.getInputDevice());
+        }
+    }
+
+    private void saveAppSettingsToFile(AppSettings appSettings, String filePath) {
+        try {
+            // Create a new file output stream for the specified file path
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+
+            // Create a new object output stream for the file output stream
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+            // Write the AppSettings object to the object output stream
+            objectOutputStream.writeObject(appSettings);
+
+            // Close the object output stream and file output stream
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private AppSettings readAppSettingsFromFile(String filePath) {
+        try {
+            // Create a new file input stream for the specified file path
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+
+            // Create a new object input stream for the file input stream
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            // Read the AppSettings object from the object input stream
+            AppSettings appSettings = (AppSettings) objectInputStream.readObject();
+
+            // Close the object input stream and file input stream
+            objectInputStream.close();
+            fileInputStream.close();
+
+            // Return the AppSettings object
+            return appSettings;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return new AppSettings();
+        }
+    }
+
+    public void handleCancelSettings() {
+        this.stage.close();
     }
 
     public List<Mixer.Info> listOutputDevices4() throws Exception {
@@ -290,5 +364,33 @@ public class AppSettingsController {
                 clip.start();
             }
         }
+    }
+
+    public Mixer.Info getListeningDevice() {
+        return listeningDevice;
+    }
+
+    public void setListeningDevice(Mixer.Info listeningDevice) {
+        this.listeningDevice = listeningDevice;
+    }
+
+    public Mixer.Info getRingDevice() {
+        return ringDevice;
+    }
+
+    public void setRingDevice(Mixer.Info ringDevice) {
+        this.ringDevice = ringDevice;
+    }
+
+    public Mixer.Info getInputDevice() {
+        return inputDevice;
+    }
+
+    public void setInputDevice(Mixer.Info inputDevice) {
+        this.inputDevice = inputDevice;
+    }
+
+    public String getRingSoundFilePath() {
+        return this.appSettings.getRingSound();
     }
 }

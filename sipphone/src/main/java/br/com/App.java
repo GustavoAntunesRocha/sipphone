@@ -11,6 +11,7 @@ import org.pjsip.pjsua2.EpConfig;
 import org.pjsip.pjsua2.TransportConfig;
 import org.pjsip.pjsua2.pjsip_transport_type_e;
 
+import br.com.controller.AppSettingsController;
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
 import br.com.view.MainWindow;
@@ -116,6 +117,8 @@ public class App extends Application {
             deleteLibrary();
         });
         mainController.setMainWindow(mainWindow);
+
+        AppSettingsController.getInstance().loadAppSettings();;
 
         acc = AccountEntity.readAccountFromFile();
 

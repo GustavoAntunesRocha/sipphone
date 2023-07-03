@@ -1,5 +1,14 @@
 package br.com.model;
 
+import java.io.File;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.SourceDataLine;
+
 import org.pjsip.pjsua2.AudDevManager;
 import org.pjsip.pjsua2.AudioMedia;
 import org.pjsip.pjsua2.Call;
@@ -15,6 +24,7 @@ import org.pjsip.pjsua2.pjsip_inv_state;
 import org.pjsip.pjsua2.pjsua_call_media_status;
 
 import br.com.controller.AccountController;
+import br.com.controller.AppSettingsController;
 import br.com.controller.CallController;
 import br.com.controller.MainController;
 import br.com.view.CallWindow;
@@ -22,35 +32,44 @@ import br.com.view.CallWindow;
 public class CallEntity extends Call {
 
     private boolean connected;
+    private boolean rejectec;
     private boolean onHold;
 
     public CallEntity(AccountEntity acc, int call_id) {
         super(acc, call_id);
         connected = false;
         onHold = false;
+        rejectec = false;
     }
 
     public CallEntity(AccountEntity acc) {
         super(acc);
         connected = false;
         onHold = false;
+        rejectec = false;
     }
 
     @Override
     public void onCallState(OnCallStateParam prm) {
         try {
             CallInfo ci = getInfo();
+            if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_INCOMING){
+                playWavFileInLoop(AppSettingsController.getInstance().getRingSoundFilePath(), AppSettingsController.getInstance().getRingDevice());
+            }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CALLING) {
                 CallController.getInstance().showCallingAlert();
             }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
                 if (CallController.getInstance().getAlert() != null)
                     CallController.getInstance().closeAlertWindow();
-                MainController.getInstance().addCallHistoryEntry(AccountController.getInstance().addCallHistoryEntry(this));
+                MainController.getInstance()
+                        .addCallHistoryEntry(AccountController.getInstance().addCallHistoryEntry(this));
                 CallController.getInstance().closeCallWindow();
                 delete();
                 connected = false;
+                rejectec = true;
             } else if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
+                connected = true;
                 CallController callController = CallController.getInstance();
                 CallWindow callWindow = new CallWindow();
                 callWindow.setCallerNumber(ci.getRemoteUri());
@@ -59,6 +78,54 @@ public class CallEntity extends Call {
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void playWavFileInLoop(String filePath, Mixer.Info selectedDevice) {
+        try {
+            // Get the audio input stream from the WAV file
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
+
+            // Get the audio format of the WAV file
+            AudioFormat audioFormat = audioInputStream.getFormat();
+
+            // Get the data line for the selected device and audio format
+            DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
+            Mixer mixer = AudioSystem.getMixer(selectedDevice);
+            SourceDataLine sourceDataLine = (SourceDataLine) mixer.getLine(dataLineInfo);
+
+            // Open the data line and start playing the WAV file
+            sourceDataLine.open(audioFormat);
+            sourceDataLine.start();
+
+            // Read the audio data from the input stream and write it to the data line in a
+            // loop
+            byte[] buffer = new byte[4096];
+            int bytesRead = 0;
+            boolean supportsMark = audioInputStream.markSupported();
+            while (!connected && !rejectec) {
+                if (supportsMark) {
+                    audioInputStream.mark(Integer.MAX_VALUE);
+                }
+                bytesRead = audioInputStream.read(buffer, 0, buffer.length);
+                if (bytesRead == -1) {
+                    if (supportsMark) {
+                        audioInputStream.reset();
+                    } else {
+                        audioInputStream.close();
+                        audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
+                    }
+                } else {
+                    sourceDataLine.write(buffer, 0, bytesRead);
+                }
+            }
+
+            // Stop playing the WAV file and close the data line and input stream
+            sourceDataLine.stop();
+            sourceDataLine.close();
+            audioInputStream.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

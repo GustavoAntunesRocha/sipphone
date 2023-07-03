@@ -1,21 +1,26 @@
 package br.com.model;
 
-public class AppSettings {
+import java.io.Serializable;
+
+public class AppSettings implements Serializable{
     
     private String listeningDevice;
     private String ringDevice;
     private String inputDevice;
+    private String ringSound;
     
     public AppSettings() {
         this.listeningDevice = "";
         this.ringDevice = "";
         this.inputDevice = "";
+        this.ringSound = "";
     }
     
-    public AppSettings(String listeningDevice, String ringDevice, String inputDevice) {
+    public AppSettings(String listeningDevice, String ringDevice, String inputDevice, String ringSound) {
         this.listeningDevice = listeningDevice;
         this.ringDevice = ringDevice;
         this.inputDevice = inputDevice;
+        this.ringSound = ringSound;
     }
     
     public String getListeningDevice() {
@@ -40,6 +45,14 @@ public class AppSettings {
     
     public void setInputDevice(String inputDevice) {
         this.inputDevice = inputDevice;
+    }
+
+    public String getRingSound() {
+        return ringSound;
+    }
+
+    public void setRingSound(String ringSound) {
+        this.ringSound = ringSound;
     }
     
     @Override
