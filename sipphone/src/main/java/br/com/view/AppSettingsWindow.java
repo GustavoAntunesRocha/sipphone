@@ -122,9 +122,20 @@ public class AppSettingsWindow {
     } */
 
     @FXML
-    private void handlePlaySoundButtonAction(ActionEvent event) {
+    private void testSoundListeningDevice(ActionEvent event) {
         File soundFile = new File("/home/gustavo/oldphone-mono.wav");
         Mixer.Info mixerInfo = listeningDeviceChoiceBox.getValue();        
+        try {
+            AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void testSoundRingDevice(ActionEvent event) {
+        File soundFile = new File("/home/gustavo/oldphone-mono.wav");
+        Mixer.Info mixerInfo = ringDeviceChoiceBox.getValue();        
         try {
             AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {

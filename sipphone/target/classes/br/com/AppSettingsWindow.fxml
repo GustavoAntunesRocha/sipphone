@@ -18,7 +18,8 @@
             <ChoiceBox fx:id="listeningDeviceChoiceBox" layoutX="129.0" layoutY="13.0" prefWidth="150.0" AnchorPane.bottomAnchor="182.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="13.0" />
             <ChoiceBox fx:id="ringDeviceChoiceBox" layoutX="129.0" layoutY="53.0" prefWidth="150.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="53.0" />
             <ChoiceBox fx:id="inputDeviceChoiceBox" layoutX="129.0" layoutY="94.0" prefWidth="150.0" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="94.0" />
-            <Button onAction="#handlePlaySoundButtonAction" layoutX="290.0" layoutY="13.0" mnemonicParsing="false" text="Test" AnchorPane.bottomAnchor="182.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="13.0" />
+            <Button layoutX="290.0" layoutY="13.0" mnemonicParsing="false" onAction="#testSoundListeningDevice" text="Test" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="13.0" />
+            <Button layoutX="290.0" layoutY="53.0" mnemonicParsing="false" onAction="#testSoundRingDevice" text="Test" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="53.0" />
          </children></AnchorPane>
   </content>
 </ScrollPane>
