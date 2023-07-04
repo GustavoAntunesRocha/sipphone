@@ -1,6 +1,8 @@
 package br.com.model;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -31,30 +33,42 @@ import br.com.view.CallWindow;
 
 public class CallEntity extends Call {
 
-    private boolean connected;
-    private boolean rejectec;
+    private volatile boolean connected;
+    private volatile boolean rejected;
     private boolean onHold;
 
     public CallEntity(AccountEntity acc, int call_id) {
         super(acc, call_id);
         connected = false;
         onHold = false;
-        rejectec = false;
+        rejected = false;
     }
 
     public CallEntity(AccountEntity acc) {
         super(acc);
         connected = false;
         onHold = false;
-        rejectec = false;
+        rejected = false;
     }
 
     @Override
     public void onCallState(OnCallStateParam prm) {
         try {
             CallInfo ci = getInfo();
-            if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_INCOMING){
-                playWavFileInLoop(AppSettingsController.getInstance().getRingSoundFilePath(), AppSettingsController.getInstance().getRingDevice());
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_INCOMING) {
+                // playWavFileInLoop(AppSettingsController.getInstance().getRingSoundFilePath(),
+                // AppSettingsController.getInstance().getRingDevice());
+                // Create a new ExecutorService with a single thread
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                // Submit the playWavFileInLoop method to the ExecutorService
+                executorService.submit(() -> {
+                    playWavFileInLoop(AppSettingsController.getInstance().getRingSoundFilePath(),
+                            AppSettingsController.getInstance().getRingDevice());
+                });
+
+                // Shutdown the ExecutorService when you're done with it
+                executorService.shutdown();
             }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CALLING) {
                 CallController.getInstance().showCallingAlert();
@@ -66,10 +80,10 @@ public class CallEntity extends Call {
                         .addCallHistoryEntry(AccountController.getInstance().addCallHistoryEntry(this));
                 CallController.getInstance().closeCallWindow();
                 delete();
-                connected = false;
-                rejectec = true;
+                setConnected(false);
+                setRejected(true);
             } else if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
-                connected = true;
+                setConnected(true);
                 CallController callController = CallController.getInstance();
                 CallWindow callWindow = new CallWindow();
                 callWindow.setCallerNumber(ci.getRemoteUri());
@@ -103,19 +117,13 @@ public class CallEntity extends Call {
             // loop
             byte[] buffer = new byte[4096];
             int bytesRead = 0;
-            boolean supportsMark = audioInputStream.markSupported();
-            while (!connected && !rejectec) {
-                if (supportsMark) {
-                    audioInputStream.mark(Integer.MAX_VALUE);
-                }
+            while (!isConnected() && !isRejected()) {
                 bytesRead = audioInputStream.read(buffer, 0, buffer.length);
                 if (bytesRead == -1) {
-                    if (supportsMark) {
-                        audioInputStream.reset();
-                    } else {
-                        audioInputStream.close();
-                        audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
-                    }
+                    // End of audio data
+                    audioInputStream.close();
+                    Thread.sleep(3500);
+                    audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
                 } else {
                     sourceDataLine.write(buffer, 0, bytesRead);
                 }
@@ -161,6 +169,22 @@ public class CallEntity extends Call {
             e.printStackTrace();
         }
         return call;
+    }
+
+    public synchronized boolean isConnected() {
+        return connected;
+    }
+
+    public synchronized void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+    public synchronized boolean isRejected() {
+        return rejected;
+    }
+
+    public synchronized void setRejected(boolean rejected) {
+        this.rejected = rejected;
     }
 
 }
