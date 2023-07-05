@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
 
 public class MainWindow {
@@ -70,6 +72,9 @@ public class MainWindow {
     @FXML
     private TableColumn<Contact, String> contactPresence;
 
+    @FXML
+    private MenuItem editMenuItem;
+
     private static MainWindow instance;
 
     public void initialize() {
@@ -81,8 +86,30 @@ public class MainWindow {
         contactNumber.setCellValueFactory(new PropertyValueFactory<>("contactNumber"));
         contactPresence.setCellValueFactory(new PropertyValueFactory<>("contactPresence"));
         callHistoryTable.setItems(FXCollections.observableList(App.acc.getCallHistory()));
+
         Platform.runLater(() -> {
             numberField.requestFocus();
+
+            
+
+            // Disable the "Edit" menu item by default
+            editMenuItem.setDisable(true);
+
+            // Add a context menu listener to the contactTable
+            // contactTable.setContextMenu(new ContextMenu());
+            contactTable.setOnContextMenuRequested(event -> {
+                if (contactTable.getSelectionModel().getSelectedItem() != null) {
+                    // Enable the "Edit" menu item if a row is selected
+                    editMenuItem.setDisable(false);
+                    Contact selectedContact = contactTable.getSelectionModel().getSelectedItem();
+                    if (selectedContact != null) {
+                        editMenuItem.setOnAction(e -> handleEditContact(selectedContact));
+                    }
+                } else {
+                    // Disable the "Edit" menu item if no row is selected
+                    editMenuItem.setDisable(true);
+                }
+            });
         });
     }
 
@@ -132,6 +159,7 @@ public class MainWindow {
     public void updateContactTable() {
         ObservableList<Contact> contactList = FXCollections.observableArrayList(App.acc.getContacts());
         contactTable.setItems(contactList);
+        contactTable.refresh();
     }
 
     public void setContactPresenceText(Contact contact, String presenceText) {
@@ -196,6 +224,10 @@ public class MainWindow {
     private void handleAppSettings() {
         // Handle app settings menu item click
         AppSettingsController.getInstance().showAppSettingsWindow();
+    }
+
+    private void handleEditContact(Contact contact) {
+        ContactController.getInstance().editContact(contact);
     }
 
     public Text getUsername() {

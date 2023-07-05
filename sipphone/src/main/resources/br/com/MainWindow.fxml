@@ -141,6 +141,7 @@
                            <ContextMenu>
                              <items>
                                <MenuItem mnemonicParsing="false" onAction="#handleContactWindow" text="Add" />
+                               <MenuItem fx:id="editMenuItem" mnemonicParsing="false" text="Edit" />
                              </items>
                            </ContextMenu>
                         </contextMenu>
