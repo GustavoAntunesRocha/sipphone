@@ -10,15 +10,20 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
+import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import br.com.App;
 import br.com.controller.AppSettingsController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ProgressBar;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 
 public class AppSettingsWindow {
@@ -30,7 +35,20 @@ public class AppSettingsWindow {
     private ChoiceBox<Mixer.Info> ringDeviceChoiceBox;
 
     @FXML
-    private ChoiceBox<String> inputDeviceChoiceBox;
+    private ChoiceBox<Mixer.Info> inputDeviceChoiceBox;
+
+    @FXML
+    private ProgressBar volumeLevel;
+
+    
+
+    public void initialize() {
+        AppSettingsController.getInstance().progressBarVolume();
+    }
+
+    public void setVolumeLevel(double volume) {
+        volumeLevel.setProgress(volume);
+    }
 
     /*
      * public void setListeningDeviceOld(List<Mixer.Info> outputDevices) {
@@ -60,7 +78,7 @@ public class AppSettingsWindow {
                     }
                     String mixerName = mixerInfo.getName();
                     String mixerDescription = mixerInfo.getDescription();
-                    
+
                     return String.format("%s - %s", mixerName, mixerDescription);
                 }
 
@@ -87,7 +105,7 @@ public class AppSettingsWindow {
                     }
                     String mixerName = mixerInfo.getName();
                     String mixerDescription = mixerInfo.getDescription();
-                    
+
                     return String.format("%s - %s", mixerName, mixerDescription);
                 }
 
@@ -101,33 +119,41 @@ public class AppSettingsWindow {
         }
     }
 
-    public void setInputDevice(List<String> devices) {
+    public void setInputDevice(List<Mixer.Info> devices) {
         inputDeviceChoiceBox.getItems().addAll(devices);
-        //TODO: set default value
+        inputDeviceChoiceBox.setValue(AppSettingsController.getInstance().getInputDevice());
+        // TODO: set default value
     }
 
-    /* @FXML
-    private void handlePlaySoundButtonAction(ActionEvent event) {
-        File soundFile = new File("/home/gustavo/oldphone-mono.wav");
-        Mixer.Info mixerInfo = null;
-        String selectedDevice = listeningDeviceChoiceBox.getValue();
-        for (Mixer.Info info : AudioSystem.getMixerInfo()) {
-            if (info.getName().equals(selectedDevice)) {
-                mixerInfo = info;
-                break;
-            }
-        }
-        try {
-            AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
-        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    } */
+    /*
+     * @FXML
+     * private void handlePlaySoundButtonAction(ActionEvent event) {
+     * File soundFile = new File("/home/gustavo/oldphone-mono.wav");
+     * Mixer.Info mixerInfo = null;
+     * String selectedDevice = listeningDeviceChoiceBox.getValue();
+     * for (Mixer.Info info : AudioSystem.getMixerInfo()) {
+     * if (info.getName().equals(selectedDevice)) {
+     * mixerInfo = info;
+     * break;
+     * }
+     * }
+     * try {
+     * AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
+     * } catch (IOException | UnsupportedAudioFileException |
+     * LineUnavailableException e) {
+     * e.printStackTrace();
+     * }
+     * }
+     */
+
+    public Mixer.Info getInputDevice() {
+        return inputDeviceChoiceBox.getValue();
+    }
 
     @FXML
     private void testSoundListeningDevice(ActionEvent event) {
         File soundFile = new File(AppSettingsController.getInstance().getRingSoundFilePath());
-        Mixer.Info mixerInfo = listeningDeviceChoiceBox.getValue();        
+        Mixer.Info mixerInfo = listeningDeviceChoiceBox.getValue();
         try {
             AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
@@ -138,7 +164,7 @@ public class AppSettingsWindow {
     @FXML
     private void testSoundRingDevice(ActionEvent event) {
         File soundFile = new File("/home/gustavo/oldphone-mono.wav");
-        Mixer.Info mixerInfo = ringDeviceChoiceBox.getValue();        
+        Mixer.Info mixerInfo = ringDeviceChoiceBox.getValue();
         try {
             AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
         } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
@@ -149,7 +175,7 @@ public class AppSettingsWindow {
     @FXML
     private void handleSave() {
         AppSettingsController.getInstance().handleSaveSettings(listeningDeviceChoiceBox.getValue().getName(),
-         ringDeviceChoiceBox.getValue().getName(), inputDeviceChoiceBox.getValue());
+                ringDeviceChoiceBox.getValue().getName(), inputDeviceChoiceBox.getValue().getName());
     }
 
     @FXML

@@ -22,6 +22,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.Port;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.tools.FileObject;
 
@@ -31,11 +32,14 @@ import org.pjsip.pjsua2.Endpoint;
 import br.com.App;
 import br.com.model.AppSettings;
 import br.com.view.AppSettingsWindow;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class AppSettingsController {
 
@@ -53,6 +57,9 @@ public class AppSettingsController {
     private FXMLLoader loader;
 
     private AppSettings appSettings;
+
+    private AudioFormat format;
+    private TargetDataLine line;
 
     private AppSettingsController() {
     }
@@ -319,29 +326,63 @@ public class AppSettingsController {
         return outputDevices;
     }
 
-    public List<String> listInputDevices()
+    public List<Mixer.Info> listInputDevices()
             throws Exception {
         ArrayList<Mixer.Info> mixerInfos = new ArrayList<Mixer.Info>(
                 Arrays.asList(
                         AudioSystem.getMixerInfo()));
         Line.Info portInfo = new Line.Info(Port.class);
-        List<String> inputDevices = new ArrayList<>();
+        ArrayList<Mixer.Info> inputDevices2 = new ArrayList<>();
         for (Mixer.Info mixerInfo : mixerInfos) {
             Mixer mixer = AudioSystem.getMixer(
                     mixerInfo);
             if (mixer.isLineSupported(
                     portInfo)) {
-                ArrayList<Line.Info> targetInfos = new ArrayList<Line.Info>(
-                        Arrays.asList(
-                                mixer.getSourceLineInfo()));
-                for (Line.Info targetInfo : targetInfos) {
-                    Port.Info pi = (Port.Info) targetInfo;
-                    inputDevices.add(pi.getName());
-                } // of for (Line.Info)
+                inputDevices2.add(mixerInfo);
             } // of if
               // (mixer.isLineSupported)
         } // of for (Mixer.Info)
-        return inputDevices;
+        return inputDevices2;
+    }
+
+    public void progressBarVolume() {
+        Platform.runLater(() -> {
+            // Set up the audio format
+            AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
+
+            // Set up the input device line
+            try {
+                Mixer mixer = AudioSystem.getMixer(appSettingsWindow.getInputDevice());
+                DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+                TargetDataLine line = (TargetDataLine) mixer.getLine(info);
+                line.open(format);
+                line.start();
+
+                // Set up a periodic task to update the volume level
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+                    byte[] buffer = new byte[1024];
+                    int count = line.read(buffer, 0, buffer.length);
+                    if (count > 0) {
+                        double rms = calculateRMS(buffer, count);
+                        appSettingsWindow.setVolumeLevel(rms/10000);
+                    }
+                }));
+                timeline.setCycleCount(Timeline.INDEFINITE);
+                timeline.play();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private double calculateRMS(byte[] buffer, int count) {
+        double sum = 0;
+        for (int i = 0; i < count; i += 2) {
+            short sample = (short) ((buffer[i + 1] << 8) | buffer[i]);
+            sum += sample * sample;
+        }
+        double rms = Math.sqrt(sum / (count / 2));
+        return rms;
     }
 
     public void playSound(File soundFile, Mixer.Info mixerInfo)
