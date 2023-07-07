@@ -27,6 +27,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.tools.FileObject;
 
 import org.pjsip.pjsua2.AudDevManager;
+import org.pjsip.pjsua2.AudioDevInfo;
 import org.pjsip.pjsua2.Endpoint;
 
 import br.com.App;
@@ -61,6 +62,8 @@ public class AppSettingsController {
     private AudioFormat format;
     private TargetDataLine line;
 
+    Timeline timeline;
+
     private AppSettingsController() {
     }
 
@@ -81,6 +84,9 @@ public class AppSettingsController {
             this.stage.setScene(this.scene);
             this.stage.show();
             this.appSettingsWindow = loader.getController();
+            this.stage.setOnCloseRequest(event -> {
+                this.timeline.stop();
+            });
             Platform.runLater(() -> {
                 try {
                     appSettingsWindow.setListeningDevice(listOutputDevices4());
@@ -115,6 +121,39 @@ public class AppSettingsController {
         }
     }
 
+    public void setMicDevice(Mixer.Info selectedDevice){
+        try {
+            // Get the index of the selected device
+            AudDevManager audDevManager = Endpoint.instance().audDevManager();
+
+            for (AudioDevInfo devName : audDevManager.enumDev2()) {
+                System.out.println("\n\n\nDevice: " + devName.getName() + "\n\n\n");
+            }
+
+            System.out.println("\n\n\nMic device name: " + selectedDevice.getName() + "\n\n\n");
+
+            String selectedDeviceName = selectedDevice.getName().split(" ")[2]
+                    .split("\\[")[1].split(":")[0] + ":CARD=" + selectedDevice.getName().split(" ")[1] +
+                    ",DEV=0";
+            String selectedDeviceVendor = selectedDevice.getVendor().split(" ")[0];
+
+            System.out.println("\n\n\nMic device 1st name: " + selectedDevice.getName().split(" ")[2]
+                    .split("\\[")[1].split(":")[0] + "\n\n\n");
+
+            System.out.println("\n\n\nMic device name: " + selectedDeviceName + "\n\n\n");
+            System.out.println("\n\n\nMic device vendor: " + selectedDeviceVendor + "\n\n\n");
+
+            int selectedDeviceIndex = audDevManager.lookupDev(selectedDeviceVendor, selectedDeviceName);
+            // Set the playback device to the selected device
+            audDevManager.setCaptureDev(selectedDeviceIndex);
+            
+                
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private Mixer.Info getSelectedDevice(String deviceName) {
         Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
         for (Mixer.Info mixerInfo : mixerInfos) {
@@ -126,10 +165,12 @@ public class AppSettingsController {
     }
 
     public void handleSaveSettings(String listeningDevice, String ringDevice, String inputDevice) {
+        this.timeline.stop();
         appSettings.setListeningDevice(listeningDevice);
         appSettings.setRingDevice(ringDevice);
         appSettings.setInputDevice(inputDevice);
         setPlaybackDevice(getSelectedDevice(listeningDevice));
+        setMicDevice(getSelectedDevice(inputDevice));
 
         // TODO: Set ring device, and input device
         this.listeningDevice = getSelectedDevice(listeningDevice);
@@ -195,6 +236,7 @@ public class AppSettingsController {
     }
 
     public void handleCancelSettings() {
+        this.timeline.stop();
         this.stage.close();
     }
 
@@ -359,7 +401,7 @@ public class AppSettingsController {
                 line.start();
 
                 // Set up a periodic task to update the volume level
-                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+                timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
                     byte[] buffer = new byte[1024];
                     int count = line.read(buffer, 0, buffer.length);
                     if (count > 0) {
