@@ -62,7 +62,7 @@ public class AppSettingsController {
     private AudioFormat format;
     private TargetDataLine line;
 
-    Timeline timeline;
+    private Timeline timeline;
 
     private AppSettingsController() {
     }
@@ -86,6 +86,7 @@ public class AppSettingsController {
             this.appSettingsWindow = loader.getController();
             this.stage.setOnCloseRequest(event -> {
                 this.timeline.stop();
+                this.line.close();
             });
             Platform.runLater(() -> {
                 try {
@@ -166,6 +167,7 @@ public class AppSettingsController {
 
     public void handleSaveSettings(String listeningDevice, String ringDevice, String inputDevice) {
         this.timeline.stop();
+        this.line.close();
         appSettings.setListeningDevice(listeningDevice);
         appSettings.setRingDevice(ringDevice);
         appSettings.setInputDevice(inputDevice);
@@ -396,7 +398,7 @@ public class AppSettingsController {
             try {
                 Mixer mixer = AudioSystem.getMixer(appSettingsWindow.getInputDevice());
                 DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-                TargetDataLine line = (TargetDataLine) mixer.getLine(info);
+                line = (TargetDataLine) mixer.getLine(info);
                 line.open(format);
                 line.start();
 
