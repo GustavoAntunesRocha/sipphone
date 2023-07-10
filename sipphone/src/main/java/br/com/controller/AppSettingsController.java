@@ -15,6 +15,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.Control;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
@@ -92,7 +93,7 @@ public class AppSettingsController {
                 try {
                     appSettingsWindow.setListeningDevice(listOutputDevices4());
                     appSettingsWindow.setRingDevice(listOutputDevices4());
-                    appSettingsWindow.setInputDevice(listInputDevices());
+                    appSettingsWindow.setInputDevice(getRecordingDevices());
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -122,7 +123,7 @@ public class AppSettingsController {
         }
     }
 
-    public void setMicDevice(Mixer.Info selectedDevice){
+    public void setMicDevice(Mixer.Info selectedDevice) {
         try {
             // Get the index of the selected device
             AudDevManager audDevManager = Endpoint.instance().audDevManager();
@@ -147,9 +148,7 @@ public class AppSettingsController {
             int selectedDeviceIndex = audDevManager.lookupDev(selectedDeviceVendor, selectedDeviceName);
             // Set the playback device to the selected device
             audDevManager.setCaptureDev(selectedDeviceIndex);
-            
-                
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -389,6 +388,20 @@ public class AppSettingsController {
         return inputDevices2;
     }
 
+    public List<Mixer.Info> getRecordingDevices() {
+        List<Mixer.Info> mixerInfos = new ArrayList<>();
+        Mixer.Info[] infos = AudioSystem.getMixerInfo();
+        for (Mixer.Info info : infos) {
+            Mixer mixer = AudioSystem.getMixer(info);
+            Line.Info[] lineInfos = mixer.getTargetLineInfo();
+            if (lineInfos.length >= 1 && lineInfos[0].getLineClass().equals(TargetDataLine.class)) {
+                // This mixer supports recording
+                mixerInfos.add(info);
+            }
+        }
+        return mixerInfos;
+    }
+
     public void progressBarVolume() {
         Platform.runLater(() -> {
             // Set up the audio format
@@ -408,7 +421,8 @@ public class AppSettingsController {
                     int count = line.read(buffer, 0, buffer.length);
                     if (count > 0) {
                         double rms = calculateRMS(buffer, count);
-                        appSettingsWindow.setVolumeLevel(rms/10000);
+                        float level = line.getLevel();
+                        appSettingsWindow.setVolumeLevel(level);
                     }
                 }));
                 timeline.setCycleCount(Timeline.INDEFINITE);
