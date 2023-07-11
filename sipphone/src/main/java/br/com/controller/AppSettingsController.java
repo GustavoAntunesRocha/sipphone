@@ -15,7 +15,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.Control;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
@@ -25,8 +24,8 @@ import javax.sound.sampled.Port;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.tools.FileObject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.pjsip.pjsua2.AudDevManager;
 import org.pjsip.pjsua2.AudioDevInfo;
 import org.pjsip.pjsua2.Endpoint;
@@ -93,7 +92,7 @@ public class AppSettingsController {
                 try {
                     appSettingsWindow.setListeningDevice(listOutputDevices4());
                     appSettingsWindow.setRingDevice(listOutputDevices4());
-                    appSettingsWindow.setInputDevice(listInputDevices());
+                    appSettingsWindow.setInputDevice(listInputAudioDevices());
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -110,12 +109,9 @@ public class AppSettingsController {
             // Get the index of the selected device
             AudDevManager audDevManager = Endpoint.instance().audDevManager();
 
-            String selectedDeviceName = selectedDevice.getName().split(" ")[1]
-                    .split("\\[")[1].split(":")[0] + ":CARD=" + selectedDevice.getName().split(" ")[0] +
-                    ",DEV=0";
-            String selectedDeviceVendor = selectedDevice.getVendor().split(" ")[0];
+            String selectedDeviceName = getDeviceName(selectedDevice.getName());
 
-            int selectedDeviceIndex = audDevManager.lookupDev(selectedDeviceVendor, selectedDeviceName);
+            int selectedDeviceIndex = audDevManager.lookupDev(audDevManager.getDevInfo(0).getDriver(), selectedDeviceName);
             // Set the playback device to the selected device
             audDevManager.setPlaybackDev(selectedDeviceIndex);
         } catch (Exception e) {
@@ -123,29 +119,16 @@ public class AppSettingsController {
         }
     }
 
+    
+
     public void setMicDevice(Mixer.Info selectedDevice) {
         try {
             // Get the index of the selected device
             AudDevManager audDevManager = Endpoint.instance().audDevManager();
 
-            for (AudioDevInfo devName : audDevManager.enumDev2()) {
-                System.out.println("\n\n\nDevice: " + devName.getName() + "\n\n\n");
-            }
+            String selectedDeviceName = getDeviceName(selectedDevice.getName());
 
-            System.out.println("\n\n\nMic device name: " + selectedDevice.getName() + "\n\n\n");
-
-            String selectedDeviceName = selectedDevice.getName().split(" ")[2]
-                    .split("\\[")[1].split(":")[0] + ":CARD=" + selectedDevice.getName().split(" ")[1] +
-                    ",DEV=0";
-            String selectedDeviceVendor = selectedDevice.getVendor().split(" ")[0];
-
-            System.out.println("\n\n\nMic device 1st name: " + selectedDevice.getName().split(" ")[2]
-                    .split("\\[")[1].split(":")[0] + "\n\n\n");
-
-            System.out.println("\n\n\nMic device name: " + selectedDeviceName + "\n\n\n");
-            System.out.println("\n\n\nMic device vendor: " + selectedDeviceVendor + "\n\n\n");
-
-            int selectedDeviceIndex = audDevManager.lookupDev(selectedDeviceVendor, selectedDeviceName);
+            int selectedDeviceIndex = audDevManager.lookupDev(audDevManager.getDevInfo(0).getDriver(), selectedDeviceName);
             // Set the playback device to the selected device
             audDevManager.setCaptureDev(selectedDeviceIndex);
 
@@ -154,10 +137,30 @@ public class AppSettingsController {
         }
     }
 
+    public boolean areStringsSimilar(String str1, String str2, double threshold) {
+        double distance = StringUtils.getJaroWinklerDistance(str1, str2);
+        return distance >= threshold;
+    }
+
+    private String getDeviceName(String device) {
+        try {
+            AudDevManager audDevManager = Endpoint.instance().audDevManager();
+            for (AudioDevInfo audioDevInfo : audDevManager.enumDev2()) {
+                if (areStringsSimilar(audioDevInfo.getName(), device, 0.8)) {
+                    return audioDevInfo.getName();
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private Mixer.Info getSelectedDevice(String deviceName) {
         Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
         for (Mixer.Info mixerInfo : mixerInfos) {
-            if (mixerInfo.getName().equals(deviceName)) {
+            if (mixerInfo.getName().startsWith(deviceName)) {
                 return mixerInfo;
             }
         }
@@ -417,10 +420,27 @@ public class AppSettingsController {
         return mixerInfos;
     }
 
+    public List<Mixer.Info> listInputAudioDevices() {
+        try {
+            List<Mixer.Info> mixerInfos = new ArrayList<>();
+            AudDevManager audDevManager = Endpoint.instance().audDevManager();
+            for (AudioDevInfo audioDevInfo : audDevManager.enumDev2()) {
+                if(audioDevInfo.getInputCount() > 0){
+                    mixerInfos.add(getSelectedDevice(audioDevInfo.getName()));
+                }
+            }
+            return mixerInfos;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void progressBarVolume() {
         Platform.runLater(() -> {
             // Set up the audio format
-            AudioFormat format = new AudioFormat(44100, 16, 2, true, false);
+            AudioFormat format = new AudioFormat(16000, 16, 2, true, false);
 
             // Set up the input device line
             try {
