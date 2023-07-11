@@ -93,7 +93,7 @@ public class AppSettingsController {
                 try {
                     appSettingsWindow.setListeningDevice(listOutputDevices4());
                     appSettingsWindow.setRingDevice(listOutputDevices4());
-                    appSettingsWindow.setInputDevice(getRecordingDevices());
+                    appSettingsWindow.setInputDevice(listInputDevices());
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -180,6 +180,12 @@ public class AppSettingsController {
 
         saveAppSettingsToFile(appSettings, "appSettings.ser");
 
+        if (this.timeline != null) {
+            this.timeline.stop();
+            this.line.stop();
+            this.line.close();
+        }
+
         this.stage.close();
 
     }
@@ -196,6 +202,11 @@ public class AppSettingsController {
 
     private void saveAppSettingsToFile(AppSettings appSettings, String filePath) {
         try {
+            if (this.timeline != null) {
+                this.timeline.stop();
+                this.line.stop();
+                this.line.close();
+            }
             // Create a new file output stream for the specified file path
             FileOutputStream fileOutputStream = new FileOutputStream(filePath);
 
@@ -237,7 +248,11 @@ public class AppSettingsController {
     }
 
     public void handleCancelSettings() {
-        this.timeline.stop();
+        if (this.timeline != null) {
+            this.timeline.stop();
+            this.line.stop();
+            this.line.close();
+        }
         this.stage.close();
     }
 
@@ -405,28 +420,34 @@ public class AppSettingsController {
     public void progressBarVolume() {
         Platform.runLater(() -> {
             // Set up the audio format
-            AudioFormat format = new AudioFormat(44100, 16, 2, true, true);
+            AudioFormat format = new AudioFormat(44100, 16, 2, true, false);
 
             // Set up the input device line
             try {
-                Mixer mixer = AudioSystem.getMixer(appSettingsWindow.getInputDevice());
-                DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-                line = (TargetDataLine) mixer.getLine(info);
-                line.open(format);
-                line.start();
-
-                // Set up a periodic task to update the volume level
-                timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
-                    byte[] buffer = new byte[1024];
-                    int count = line.read(buffer, 0, buffer.length);
-                    if (count > 0) {
-                        double rms = calculateRMS(buffer, count);
-                        float level = line.getLevel();
-                        appSettingsWindow.setVolumeLevel(level);
+                Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
+                for (Mixer.Info mixerInfo : mixerInfos) {
+                    Mixer mixer = AudioSystem.getMixer(mixerInfo);
+                    if (mixer.isLineSupported(new DataLine.Info(TargetDataLine.class, format))) {
+                        // Use this mixer to create the TargetDataLine
+                        line = (TargetDataLine) mixer
+                                .getLine(new DataLine.Info(TargetDataLine.class, format));
+                        // ...
+                        line.open(format);
+                        line.start();
+                        // Set up a periodic task to update the volume level
+                        timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+                            byte[] buffer = new byte[1024];
+                            int count = line.read(buffer, 0, buffer.length);
+                            if (count > 0) {
+                                double rms = calculateRMS(buffer, count);
+                                float level = line.getLevel();
+                                appSettingsWindow.setVolumeLevel(level);
+                            }
+                        }));
+                        timeline.setCycleCount(Timeline.INDEFINITE);
+                        timeline.play();
                     }
-                }));
-                timeline.setCycleCount(Timeline.INDEFINITE);
-                timeline.play();
+                }
             } catch (LineUnavailableException e) {
                 e.printStackTrace();
             }
