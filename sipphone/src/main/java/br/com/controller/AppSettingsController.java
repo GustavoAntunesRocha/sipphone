@@ -85,8 +85,11 @@ public class AppSettingsController {
             this.stage.show();
             this.appSettingsWindow = loader.getController();
             this.stage.setOnCloseRequest(event -> {
-                this.timeline.stop();
-                this.line.close();
+                if (this.timeline != null) {
+                    this.timeline.stop();
+                    this.line.stop();
+                    this.line.close();
+                }
             });
             Platform.runLater(() -> {
                 try {
@@ -111,15 +114,14 @@ public class AppSettingsController {
 
             String selectedDeviceName = getDeviceName(selectedDevice.getName());
 
-            int selectedDeviceIndex = audDevManager.lookupDev(audDevManager.getDevInfo(0).getDriver(), selectedDeviceName);
+            int selectedDeviceIndex = audDevManager.lookupDev(audDevManager.getDevInfo(0).getDriver(),
+                    selectedDeviceName);
             // Set the playback device to the selected device
             audDevManager.setPlaybackDev(selectedDeviceIndex);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    
 
     public void setMicDevice(Mixer.Info selectedDevice) {
         try {
@@ -128,7 +130,8 @@ public class AppSettingsController {
 
             String selectedDeviceName = getDeviceName(selectedDevice.getName());
 
-            int selectedDeviceIndex = audDevManager.lookupDev(audDevManager.getDevInfo(0).getDriver(), selectedDeviceName);
+            int selectedDeviceIndex = audDevManager.lookupDev(audDevManager.getDevInfo(0).getDriver(),
+                    selectedDeviceName);
             // Set the playback device to the selected device
             audDevManager.setCaptureDev(selectedDeviceIndex);
 
@@ -168,26 +171,22 @@ public class AppSettingsController {
     }
 
     public void handleSaveSettings(String listeningDevice, String ringDevice, String inputDevice) {
-        this.timeline.stop();
-        this.line.close();
+        if (this.timeline != null) {
+            this.timeline.stop();
+            this.line.stop();
+            this.line.close();
+        }
         appSettings.setListeningDevice(listeningDevice);
         appSettings.setRingDevice(ringDevice);
         appSettings.setInputDevice(inputDevice);
         setPlaybackDevice(getSelectedDevice(listeningDevice));
         setMicDevice(getSelectedDevice(inputDevice));
 
-        // TODO: Set ring device, and input device
         this.listeningDevice = getSelectedDevice(listeningDevice);
         this.ringDevice = getSelectedDevice(ringDevice);
         this.inputDevice = getSelectedDevice(inputDevice);
 
         saveAppSettingsToFile(appSettings, "appSettings.ser");
-
-        if (this.timeline != null) {
-            this.timeline.stop();
-            this.line.stop();
-            this.line.close();
-        }
 
         this.stage.close();
 
@@ -425,7 +424,7 @@ public class AppSettingsController {
             List<Mixer.Info> mixerInfos = new ArrayList<>();
             AudDevManager audDevManager = Endpoint.instance().audDevManager();
             for (AudioDevInfo audioDevInfo : audDevManager.enumDev2()) {
-                if(audioDevInfo.getInputCount() > 0){
+                if (audioDevInfo.getInputCount() > 0) {
                     mixerInfos.add(getSelectedDevice(audioDevInfo.getName()));
                 }
             }
@@ -439,35 +438,25 @@ public class AppSettingsController {
 
     public void progressBarVolume() {
         Platform.runLater(() -> {
-            // Set up the audio format
-            AudioFormat format = new AudioFormat(16000, 16, 2, true, false);
-
-            // Set up the input device line
+            AudioFormat format = new AudioFormat(48000, 16, 1, true, false);
             try {
-                Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
-                for (Mixer.Info mixerInfo : mixerInfos) {
-                    Mixer mixer = AudioSystem.getMixer(mixerInfo);
-                    if (mixer.isLineSupported(new DataLine.Info(TargetDataLine.class, format))) {
-                        // Use this mixer to create the TargetDataLine
-                        line = (TargetDataLine) mixer
-                                .getLine(new DataLine.Info(TargetDataLine.class, format));
-                        // ...
-                        line.open(format);
-                        line.start();
-                        // Set up a periodic task to update the volume level
-                        timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
-                            byte[] buffer = new byte[1024];
-                            int count = line.read(buffer, 0, buffer.length);
-                            if (count > 0) {
-                                double rms = calculateRMS(buffer, count);
-                                float level = line.getLevel();
-                                appSettingsWindow.setVolumeLevel(level);
-                            }
-                        }));
-                        timeline.setCycleCount(Timeline.INDEFINITE);
-                        timeline.play();
+                Mixer mixer = AudioSystem.getMixer(this.inputDevice);
+
+                line = (TargetDataLine) mixer
+                        .getLine(new DataLine.Info(TargetDataLine.class, format));
+                line.open(format);
+                line.start();
+                // Set up a periodic task to update the volume level
+                timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+                    byte[] buffer = new byte[1024];
+                    int count = line.read(buffer, 0, buffer.length);
+                    if (count > 0) {
+                        double rms = calculateRMS(buffer, count);
+                        appSettingsWindow.setVolumeLevel(rms / 2000);
                     }
-                }
+                }));
+                timeline.setCycleCount(Timeline.INDEFINITE);
+                timeline.play();
             } catch (LineUnavailableException e) {
                 e.printStackTrace();
             }
