@@ -110,6 +110,15 @@ public class MainWindow {
                     editMenuItem.setDisable(true);
                 }
             });
+            contactTable.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) { // Check if it's a double-click
+                    Contact selectedContact = contactTable.getSelectionModel().getSelectedItem();
+                    if (selectedContact != null) {
+                        // Handle the double-click event for the selected contact
+                        CallController.getInstance().handleCall(selectedContact.getContactNumber());
+                    }
+                }
+            });
         });
     }
 
