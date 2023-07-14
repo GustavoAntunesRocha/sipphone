@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -194,7 +196,13 @@ public class AppSettingsController {
 
     public void loadAppSettings() {
         appSettings = readAppSettingsFromFile("appSettings.ser");
-        appSettings.setRingSound("/home/gustavo/oldphone-mono.wav");
+        String path = AppSettingsController.class.getResource("/sounds/oldphone-mono.wav").getPath();
+        try {
+            appSettings.setRingSound(URLDecoder.decode(path, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         if (appSettings != null) {
             this.listeningDevice = getSelectedDevice(appSettings.getListeningDevice());
             this.ringDevice = getSelectedDevice(appSettings.getRingDevice());

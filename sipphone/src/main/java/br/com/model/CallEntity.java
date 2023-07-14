@@ -56,8 +56,6 @@ public class CallEntity extends Call {
         try {
             CallInfo ci = getInfo();
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_INCOMING) {
-                // playWavFileInLoop(AppSettingsController.getInstance().getRingSoundFilePath(),
-                // AppSettingsController.getInstance().getRingDevice());
                 // Create a new ExecutorService with a single thread
                 ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -72,6 +70,16 @@ public class CallEntity extends Call {
             }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CALLING) {
                 CallController.getInstance().showCallingAlert();
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+                // Submit the playWavFileInLoop method to the ExecutorService
+                executorService.submit(() -> {
+                    playWavFileInLoop(AppSettingsController.getInstance().getRingSoundFilePath(),
+                            AppSettingsController.getInstance().getRingDevice());
+                });
+
+                // Shutdown the ExecutorService when you're done with it
+                executorService.shutdown();
             }
             if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
                 if (CallController.getInstance().getAlert() != null)
