@@ -90,7 +90,15 @@ public class MainWindow {
         Platform.runLater(() -> {
             numberField.requestFocus();
 
-            
+            callHistoryTable.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) { // Check if it's a double-click
+                    CallHistoryEntry selectedCallHistoryEntry = callHistoryTable.getSelectionModel().getSelectedItem();
+                    if (selectedCallHistoryEntry != null) {
+                        // Handle the double-click event for the selected contact
+                        CallController.getInstance().handleCall(selectedCallHistoryEntry.getNumber());
+                    }
+                }
+            });
 
             // Disable the "Edit" menu item by default
             editMenuItem.setDisable(true);
