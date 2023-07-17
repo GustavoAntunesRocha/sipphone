@@ -154,7 +154,7 @@ public class AppSettingsWindow {
 
     @FXML
     private void testSoundRingDevice(ActionEvent event) {
-        File soundFile = new File("/home/gustavo/oldphone-mono.wav");
+        File soundFile = new File(AppSettingsController.getInstance().getRingSoundFilePath());
         Mixer.Info mixerInfo = ringDeviceChoiceBox.getValue();
         try {
             AppSettingsController.getInstance().playSound(soundFile, mixerInfo);
