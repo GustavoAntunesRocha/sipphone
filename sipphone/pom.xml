@@ -25,6 +25,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.ari4java</groupId>
+            <artifactId>ari4java</artifactId>
+            <version>0.16.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

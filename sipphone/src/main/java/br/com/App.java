@@ -15,6 +15,11 @@ import br.com.controller.AppSettingsController;
 import br.com.controller.MainController;
 import br.com.model.AccountEntity;
 import br.com.view.MainWindow;
+import ch.loway.oss.ari4java.ARI;
+import ch.loway.oss.ari4java.AriVersion;
+import ch.loway.oss.ari4java.generated.actions.requests.ChannelsListGetRequest;
+import ch.loway.oss.ari4java.generated.models.AsteriskInfo;
+import ch.loway.oss.ari4java.generated.models.Channel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,6 +34,12 @@ public class App extends Application {
     public static AccountEntity acc;
 
     public final static String ACC_FILE_PATH = "account.bin";
+
+    private static String asteriskUrl;
+
+    private static String asteriskAriUsername;
+
+    private static String asteriskAriPassword;
 
     public static void connectSipServer() {
         try {
@@ -56,6 +67,12 @@ public class App extends Application {
 
             MainController.getInstance().loadContactsPresenceSubscription();
             MainController.getInstance().updateContactTable();
+
+            ARI ari = ARI.build(asteriskUrl, "asterisk", asteriskAriUsername, asteriskAriPassword, AriVersion.IM_FEELING_LUCKY);
+            for (ch.loway.oss.ari4java.generated.models.Endpoint endpoint : ari.endpoints().list().execute()) {
+                System.out.println("\n\nEndpoint name: " + endpoint.getResource() + " - status: " + endpoint.getState());
+                ari.closeAction(endpoint);
+            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -147,6 +164,9 @@ public class App extends Application {
     }
 
     public static void main(String argv[]) {
+        asteriskUrl = System.getProperty("asteriskUrl");
+        asteriskAriUsername = System.getProperty("asteriskAriUsername");
+        asteriskAriPassword = System.getProperty("asteriskAriPassword");
         launch(argv);
     }
 
